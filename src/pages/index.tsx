@@ -1,8 +1,7 @@
 import Head from "next/head"
 
-import { Input } from "../components/Input"
+import { Table } from "../components/Table"
 import { Modal } from "../components/Modal"
-import { Combobox } from "../components/Combobox"
 import { CreateUserForm } from "../components/CreateUserForm"
 
 import User from "../assets/user.svg"
@@ -18,8 +17,6 @@ export default function Home() {
       </Head>
 
       <main>
-        <Input placeholder="Default Input" />
-        <Combobox items={items} />
         <Modal
           header={
             <>
@@ -30,6 +27,8 @@ export default function Home() {
         >
           <CreateUserForm />
         </Modal>
+
+        <Table />
       </main>
     </div>
   )

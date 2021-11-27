@@ -1,8 +1,13 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { Checkbox } from "@chakra-ui/react"
 import { Column, useTable } from "react-table"
+import { useColorModeValue } from "@chakra-ui/color-mode"
+
+import { styles } from "./styles"
+import { TableFirstColumn } from "../TableFirstColumn"
 
 interface CustomColumn {
-  col1: string
+  col1: React.ReactNode
   col2: string
   col3: string
 }
@@ -32,20 +37,45 @@ export function Table() {
   const columns: Column<CustomColumn>[] = useMemo(
     () => [
       {
-        Header: "Column 1",
-        accessor: "col1" // accessor is the "key" in the data
+        Header: (
+          <TableFirstColumn
+            checkboxStyles={styles.checkbox}
+            toggleAllItems={toggleAllItems}
+          />
+        ),
+        accessor: "col1"
       },
       {
-        Header: "Column 2",
+        Header: "Responsáveis",
         accessor: "col2"
       },
       {
-        Header: "Column 3",
+        Header: "Data de entrega",
         accessor: "col3"
       }
     ],
     []
   )
+
+  const [checkedItems, setCheckedItems] = useState<boolean[]>(
+    Array(columns.length).fill(false)
+  )
+
+  function toggleAllItems(checked: boolean) {
+    setCheckedItems(Array(columns.length).fill(checked))
+  }
+
+  function toggleItem(checked: boolean, index: number) {
+    setCheckedItems(items => {
+      const newItems = items.filter((item, indexInArray) => {
+        return indexInArray !== index
+      })
+
+      newItems.splice(index, 0, checked)
+
+      return newItems
+    })
+  }
 
   const {
     rows,
@@ -55,13 +85,21 @@ export function Table() {
     getTableBodyProps
   } = useTable<CustomColumn>({ columns, data })
 
+  const oddBg = useColorModeValue("#F2F2F2", "#1C1E27")
+  const tableBg = useColorModeValue("#F9F9FB", "#22242E")
+  const borderColor = useColorModeValue("#1719234D", "#464750")
+
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map((headerGroup, index) => (
-          <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th key={index} {...column.getHeaderProps()}>
+    <table style={styles.container(tableBg)} {...getTableProps()}>
+      <thead style={{ borderBottom: `2px solid ${borderColor}` }}>
+        {headerGroups.map((headerGroup, hIndex) => (
+          <tr key={hIndex} {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column, cIndex) => (
+              <th
+                key={cIndex}
+                style={styles.th(cIndex, borderColor)}
+                {...column.getHeaderProps()}
+              >
                 {column.render("Header")}
               </th>
             ))}
@@ -69,13 +107,26 @@ export function Table() {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row, index) => {
+        {rows.map((row, rIndex) => {
           prepareRow(row)
+          const backgroundColor = rIndex % 2 === 0 ? tableBg : oddBg
 
           return (
-            <tr key={index} {...row.getRowProps()}>
-              {row.cells.map(cell => (
-                <td key={index} {...cell.getCellProps()}>
+            <tr
+              key={rIndex}
+              style={styles.tr(backgroundColor)}
+              {...row.getRowProps()}
+            >
+              {row.cells.map((cell, cIndex) => (
+                <td style={styles.td} key={cIndex} {...cell.getCellProps()}>
+                  {cIndex % 3 === 0 && (
+                    <Checkbox
+                      colorScheme="gray"
+                      style={styles.checkbox}
+                      isChecked={checkedItems[rIndex]}
+                      onChange={e => toggleItem(e.target.checked, rIndex)}
+                    />
+                  )}
                   {cell.render("Cell")}
                 </td>
               ))}

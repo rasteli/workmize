@@ -39,7 +39,7 @@ export function CreateUserForm() {
         </div>
         <div style={{ marginBottom: 15 }}>
           <Label value="E-mail" required />
-          <Input placeholder="Digite o seu e-mail..." required />
+          <Input placeholder="Digite o seu e-mail..." type="email" required />
         </div>
         <div style={{ marginBottom: 15 }}>
           <Label value="Senha" required />

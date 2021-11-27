@@ -29,7 +29,8 @@ export function Combobox({ items }: ComboboxProps) {
     getMenuProps,
     getComboboxProps,
     getItemProps,
-    selectedItem
+    selectedItem,
+    getInputProps
   } = useCombobox({
     items
     // onInputValueChange: ({ inputValue }) => {
@@ -57,7 +58,12 @@ export function Combobox({ items }: ComboboxProps) {
       {!isOpen ? (
         <div {...getComboboxProps()}>
           <InputGroup {...getToggleButtonProps()}>
-            <Input value={selectedItem} color={color} readOnly />
+            <Input
+              value={selectedItem}
+              color={color}
+              readOnly
+              {...getInputProps()}
+            />
 
             <InputRightElement>
               <button aria-label="toggle menu">
