@@ -18,7 +18,7 @@ export function TableFirstColumn({
   const [order, setOrder] = useState(false)
   const [search, setSearch] = useState(false)
 
-  const rotateInDeg = !order ? "0" : "-180"
+  const rotateInDeg = order ? "-180" : "0"
 
   return (
     <div style={styles.container} onClick={() => search && setSearch(false)}>
@@ -27,7 +27,7 @@ export function TableFirstColumn({
         style={checkboxStyles}
         onChange={e => toggleAllItems(e.target.checked)}
       />
-      <span style={{ color: "#805AD5" }}>
+      <div style={{ color: "#805AD5" }}>
         Tarefa
         <IconButton
           icon={<Order />}
@@ -38,7 +38,7 @@ export function TableFirstColumn({
           _hover={{ background: "none" }}
           _focus={{ boxShadow: "none" }}
         />
-      </span>
+      </div>
       {!search ? (
         <IconButton
           icon={<Search />}

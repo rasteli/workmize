@@ -14,7 +14,7 @@ import EyeDark from "../../assets/eye_dark.svg"
 import EyeLight from "../../assets/eye_light.svg"
 
 export function CreateUserForm() {
-  const items = ["Administrador", "Membro"]
+  const roles = ["Administrador", "Membro"]
   const [showPwd, setShowPwd] = useState(false)
 
   const Eye = useColorModeValue(EyeLight, EyeDark)
@@ -59,7 +59,7 @@ export function CreateUserForm() {
           </InputGroup>
         </div>
 
-        <Combobox items={items} />
+        <Combobox items={roles} />
         <Button type="submit" label="Criar usuário" marginTop={20} />
       </form>
     </div>

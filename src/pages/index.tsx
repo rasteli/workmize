@@ -17,7 +17,9 @@ export default function Home() {
       </Head>
 
       <main>
-        <Modal
+        <Table />
+
+        {/* <Modal
           header={
             <>
               <User />
@@ -26,9 +28,7 @@ export default function Home() {
           }
         >
           <CreateUserForm />
-        </Modal>
-
-        <Table />
+        </Modal> */}
       </main>
     </div>
   )
