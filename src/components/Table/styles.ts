@@ -4,6 +4,7 @@ export const styles = {
 
     display: "flex",
     flexDirection: "column",
+
     alignItems: "center",
     justifyContent: "center",
 
@@ -20,12 +21,18 @@ export const styles = {
     color: "#D1D0D1"
   } as React.CSSProperties,
 
-  table: (backgroundColor: string): React.CSSProperties => ({
+  table: (backgroundColor: string, fontSize: number): React.CSSProperties => ({
+    fontSize,
     backgroundColor,
 
     width: "100%",
     borderRadius: 20,
     overflow: "hidden"
+  }),
+
+  thead: (borderColor: string): React.CSSProperties => ({
+    borderBottom: `2px solid ${borderColor}`,
+    color: "#718086"
   }),
 
   tr: (backgroundColor: string): React.CSSProperties => ({
@@ -36,15 +43,16 @@ export const styles = {
     borderLeft: index === 1 ? `2px solid ${borderColor}` : "",
     borderRight: index === 1 ? `2px solid ${borderColor}` : "",
 
-    width: 500,
     textAlign: "left",
     padding: "10px 20px"
   }),
 
-  checkbox: {
+  checkbox: (borderColor: string): React.CSSProperties => ({
     marginRight: 15,
-    verticalAlign: "middle"
-  } as React.CSSProperties,
+    verticalAlign: "middle",
+
+    borderColor
+  }),
 
   td: (cIndex: number): React.CSSProperties => ({
     padding: 20,

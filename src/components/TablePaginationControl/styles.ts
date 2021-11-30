@@ -8,7 +8,9 @@ export const styles = {
   } as React.CSSProperties,
 
   page: {
-    margin: "auto"
+    margin: "auto",
+    display: "flex",
+    alignItems: "center"
   } as React.CSSProperties,
 
   currentPage: (

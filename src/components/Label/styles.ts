@@ -4,6 +4,11 @@ export const styles = {
     alignItems: "center"
   } as React.CSSProperties,
 
+  label: (invalid: boolean): React.CSSProperties => ({
+    flexGrow: 1,
+    color: invalid && "#F5565C"
+  }),
+
   span: {
     color: "#F5565C",
     fontSize: 10,

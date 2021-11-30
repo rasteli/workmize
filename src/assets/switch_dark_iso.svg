@@ -1,0 +1,7 @@
+<svg id="Switch_Dia_Noite" data-name="Switch Dia/Noite" xmlns="http://www.w3.org/2000/svg" width="99" height="19" viewBox="0 0 99 19">
+  <rect id="Retângulo_2" data-name="Retângulo 2" width="37" height="19" rx="9.5" transform="translate(24)" fill="#171923"/>
+  <circle id="Elipse_1" data-name="Elipse 1" cx="6.5" cy="6.5" r="6.5" transform="translate(44 3)" fill="#22242E"/>
+  <g id="Lua" transform="translate(30 4.348)">
+    <path id="Caminho_79" data-name="Caminho 79" d="M8.781,5.76a.316.316,0,0,0-.265.058,3.376,3.376,0,0,1-1.024.6,3.207,3.207,0,0,1-1.162.207A3.379,3.379,0,0,1,2.946,3.239,3.547,3.547,0,0,1,3.13,2.123a3.09,3.09,0,0,1,.552-.99A.294.294,0,0,0,3.637.719.316.316,0,0,0,3.372.661,4.644,4.644,0,0,0,.932,2.3,4.557,4.557,0,1,0,8.988,6.116.279.279,0,0,0,8.781,5.76Z" transform="translate(0 0)" fill="#fff"/>
+  </g>
+</svg>

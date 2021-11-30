@@ -3,8 +3,10 @@ import { styles } from "./styles"
 
 export interface ButtonProps {
   label: string
+  color?: string
   width?: string
   height?: string
+  loading?: boolean
   disabled?: boolean
   isFullWidth?: boolean
   backgroundColor?: string
@@ -28,11 +30,14 @@ export function Button({
   marginRight,
   marginBottom,
   size = "md",
+  color = "#FFF",
+  loading = false,
   disabled = false,
   isFullWidth = false,
   backgroundColor = "#805AD5"
 }: ButtonProps) {
   const style = styles.button(
+    color,
     width,
     height,
     backgroundColor,
@@ -49,8 +54,10 @@ export function Button({
       type={type}
       style={style}
       onClick={onClick}
+      isLoading={loading}
       isDisabled={disabled}
       _hover={{ opacity: 0.9 }}
+      _focus={{ boxShadow: "none", background: "#fff" }}
     >
       {label}
     </ChakraButton>

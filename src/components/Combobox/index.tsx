@@ -2,8 +2,11 @@ import { useCombobox } from "downshift"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 import { InputGroup, InputRightElement } from "@chakra-ui/input"
 
+import { styles } from "./styles"
+
 import { Input } from "../Input"
 import { Label } from "../Label"
+import { useCustomCombobox } from "../../contexts/ComboboxContext"
 
 import CheckDark from "../../assets/check_dark.svg"
 import CheckLight from "../../assets/check_light.svg"
@@ -13,14 +16,18 @@ import ArrowLight from "../../assets/arrow_light.svg"
 
 export interface ComboboxProps {
   items: any[]
+  gap?: number
+  inputSize: "xs" | "sm" | "md" | "lg"
 }
 
-export function Combobox({ items }: ComboboxProps) {
+export function Combobox({ items, inputSize, gap }: ComboboxProps) {
   const color = useColorModeValue("#22242E", "#FFFFFF")
   const backgroundColor = useColorModeValue("#EDF2F7", "#0F1016")
 
   const Check = useColorModeValue(CheckLight, CheckDark)
   const Arrow = useColorModeValue(ArrowLight, ArrowDark)
+
+  const { setComboboxValue } = useCustomCombobox()
 
   const {
     isOpen,
@@ -32,33 +39,20 @@ export function Combobox({ items }: ComboboxProps) {
     selectedItem,
     getInputProps
   } = useCombobox({
-    items
-    // onInputValueChange: ({ inputValue }) => {
-    //   setInputItems(
-    //     items.filter(item =>
-    //       item.toLowerCase().startsWith(inputValue.toLowerCase())
-    //     )
-    //   )
-    // }
+    items,
+    onInputValueChange: ({ inputValue }) => {
+      setComboboxValue(inputValue)
+    }
   })
 
-  const comboboxMenuStyle: React.CSSProperties = {
-    color,
-    backgroundColor,
-    padding: 10,
-    borderWidth: 2,
-    borderRadius: 15,
-    borderColor: "#CBD5E0",
-    listStyleType: "none"
-  }
-
   return (
-    <div>
+    <div style={{ marginBottom: gap }}>
       <Label value="Permissão" required {...getLabelProps()} />
       {!isOpen ? (
         <div {...getComboboxProps()}>
           <InputGroup {...getToggleButtonProps()}>
             <Input
+              size={inputSize}
               value={selectedItem}
               color={color}
               readOnly
@@ -73,7 +67,10 @@ export function Combobox({ items }: ComboboxProps) {
           </InputGroup>
         </div>
       ) : (
-        <ul {...getMenuProps()} style={comboboxMenuStyle}>
+        <ul
+          {...getMenuProps()}
+          style={styles.comboboxMenuStyle(color, backgroundColor)}
+        >
           {items.map((item, index) => (
             <li
               key={index}

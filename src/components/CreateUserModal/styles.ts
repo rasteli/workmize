@@ -11,11 +11,6 @@ export const styles = {
     margin: "30px 20px"
   }),
 
-  form: {
-    display: "flex",
-    flexDirection: "column"
-  } as React.CSSProperties,
-
   imageWrapper: {
     display: "flex",
     alignSelf: "center",

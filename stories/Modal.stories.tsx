@@ -1,6 +1,6 @@
 import { Story, Meta } from "@storybook/react"
 import { Modal, ModalProps } from "../src/components/Modal"
-import { CreateUserForm } from "../src/components/CreateUserForm"
+import { UserForm } from "../src/components/UserForm"
 
 import User from "../src/assets/user.svg"
 
@@ -19,5 +19,5 @@ CreateUser.args = {
       <h1 style={{ marginLeft: 10 }}>Criar usuário</h1>
     </>
   ),
-  children: <CreateUserForm />
+  children: <UserForm type="signup" />
 }

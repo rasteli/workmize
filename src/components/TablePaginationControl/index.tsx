@@ -1,7 +1,10 @@
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
-import { Button } from "../Button"
+
+import Chevron from "../../assets/chevron.svg"
+
+import { PreviousButton, NextButton } from "../PaginationControlButtons"
 
 interface PaginationControlProps {
   canNextPage: boolean
@@ -22,19 +25,14 @@ export function TablePaginationControl({
   nextPage,
   previousPage
 }: PaginationControlProps) {
-  const buttonBg = useColorModeValue("#A0AEC0", "#22242E")
   const currentPageBg = useColorModeValue("#FFFFFF", "#22242E")
   const boxShadow = useColorModeValue("0px 2px 5px #0000001C", "none")
 
   return (
     <footer style={styles.container}>
-      <Button
-        label="Anterior"
-        backgroundColor={buttonBg}
-        disabled={!canPreviousPage}
-        onClick={previousPage}
-        height="40px"
-        width="150px"
+      <PreviousButton
+        canPreviousPage={canPreviousPage}
+        previousPage={previousPage}
       />
 
       <div style={styles.page}>
@@ -45,14 +43,7 @@ export function TablePaginationControl({
         de {pageCount}
       </div>
 
-      <Button
-        label="Próxima"
-        backgroundColor={buttonBg}
-        disabled={!canNextPage}
-        onClick={nextPage}
-        height="40px"
-        width="150px"
-      />
+      <NextButton canNextPage={canNextPage} nextPage={nextPage} />
     </footer>
   )
 }

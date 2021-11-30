@@ -4,8 +4,13 @@ import { Column, useTable, usePagination } from "react-table"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
+
+import { useViewport } from "../../hooks/useViewport"
 import { TableFirstColumn } from "../TableFirstColumn"
 import { TablePaginationControl } from "../TablePaginationControl"
+
+import Checked from "../../assets/check_checked.svg"
+import Unchecked from "../../assets/check_unchecked.svg"
 
 interface CustomColumn {
   col1: React.ReactNode
@@ -14,6 +19,15 @@ interface CustomColumn {
 }
 
 export function Table() {
+  const { aboveThreshold } = useViewport(756)
+  const fontSize = aboveThreshold ? 16 : 12
+
+  const oddBg = useColorModeValue("#F2F2F2", "#1C1E27")
+  const tableBg = useColorModeValue("#F9F9FB", "#22242E")
+  const containerBg = useColorModeValue("#FFFFFF", "#171923")
+  const borderColor = useColorModeValue("#1719234D", "#464750")
+  const checkboxBorder = useColorModeValue("#22242E", "#F9F9FB")
+
   const data = useMemo(
     () => [
       {
@@ -65,7 +79,7 @@ export function Table() {
       {
         Header: (
           <TableFirstColumn
-            checkboxStyles={styles.checkbox}
+            checkboxStyles={styles.checkbox(checkboxBorder)}
             toggleAllItems={toggleAllItems}
           />
         ),
@@ -80,9 +94,12 @@ export function Table() {
         accessor: "col3"
       }
     ],
-    []
+    [checkboxBorder]
   )
 
+  const [completedItems, setCompletedItems] = useState<boolean[]>(
+    Array(data.length).fill(false)
+  )
   const [checkedItems, setCheckedItems] = useState<boolean[]>(
     Array(data.length).fill(false)
   )
@@ -93,6 +110,18 @@ export function Table() {
 
   function toggleItem(checked: boolean, index: number) {
     setCheckedItems(items => {
+      const newItems = items.filter((item, indexInArray) => {
+        return indexInArray !== index
+      })
+
+      newItems.splice(index, 0, checked)
+
+      return newItems
+    })
+  }
+
+  function toggleCompletedItem(checked: boolean, index: number) {
+    setCompletedItems(items => {
       const newItems = items.filter((item, indexInArray) => {
         return indexInArray !== index
       })
@@ -122,17 +151,12 @@ export function Table() {
     usePagination
   )
 
-  const oddBg = useColorModeValue("#F2F2F2", "#1C1E27")
-  const tableBg = useColorModeValue("#F9F9FB", "#22242E")
-  const containerBg = useColorModeValue("#FFFFFF", "#171923")
-  const borderColor = useColorModeValue("#1719234D", "#464750")
-
   return (
     <div style={styles.container(containerBg)}>
       <header style={styles.header}>({data.length} tarefas)</header>
 
-      <table style={styles.table(tableBg)} {...getTableProps()}>
-        <thead style={{ borderBottom: `2px solid ${borderColor}` }}>
+      <table style={styles.table(tableBg, fontSize)} {...getTableProps()}>
+        <thead style={styles.thead(borderColor)}>
           {headerGroups.map((headerGroup, hIndex) => (
             <tr key={hIndex} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, cIndex) => (
@@ -165,14 +189,34 @@ export function Table() {
                     {...cell.getCellProps()}
                   >
                     {cIndex % 3 === 0 && (
-                      <Checkbox
-                        colorScheme="gray"
-                        style={styles.checkbox}
-                        isChecked={checkedItems[rIndex]}
-                        onChange={e => toggleItem(e.target.checked, rIndex)}
-                      />
+                      <>
+                        <Checkbox
+                          colorScheme="gray"
+                          style={styles.checkbox(checkboxBorder)}
+                          isChecked={checkedItems[rIndex]}
+                          onChange={e => toggleItem(e.target.checked, rIndex)}
+                        />
+
+                        {aboveThreshold &&
+                          (completedItems[rIndex] ? (
+                            <Checked
+                              style={{ cursor: "pointer" }}
+                              onClick={() => toggleCompletedItem(false, rIndex)}
+                            />
+                          ) : (
+                            <Unchecked
+                              style={{ cursor: "pointer" }}
+                              onClick={() => toggleCompletedItem(true, rIndex)}
+                            />
+                          ))}
+                      </>
                     )}
-                    <Text isTruncated>{cell.render("Cell")}</Text>
+                    <Text
+                      style={{ marginLeft: aboveThreshold ? 15 : 0 }}
+                      isTruncated
+                    >
+                      {cell.render("Cell")}
+                    </Text>
                   </td>
                 ))}
               </tr>

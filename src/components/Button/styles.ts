@@ -1,5 +1,6 @@
 export const styles = {
   button: (
+    color: string,
     width: string,
     height: string,
     backgroundColor: string,
@@ -10,7 +11,7 @@ export const styles = {
     marginBottom: number
   ): React.CSSProperties => ({
     height,
-    color: "#fff",
+    color,
     backgroundColor,
     width: isFullWidth ? "100%" : width,
 

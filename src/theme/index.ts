@@ -12,7 +12,7 @@ export const theme = extendTheme({
     global: (props: StyleFunctionProps) => ({
       body: {
         fontFamily: "Inter",
-        bg: mode("white", "#464750")(props)
+        bg: mode("#F6F7FB", "#22242E")(props)
       }
     })
   }

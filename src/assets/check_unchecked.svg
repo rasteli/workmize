@@ -1,0 +1,7 @@
+<svg id="Check" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+  <g id="Elipse_60" fill="none" stroke="#718086" stroke-width="2">
+    <circle cx="10.5" cy="10.5" r="10.5" stroke="none"/>
+    <circle cx="10.5" cy="10.5" r="9.5" fill="none"/>
+  </g>
+  <path id="check-2" d="M3.567,7.5a.475.475,0,0,1-.673,0L.209,4.814a.713.713,0,0,1,0-1.009l.336-.336a.713.713,0,0,1,1.009,0L3.231,5.146,7.761.615a.713.713,0,0,1,1.009,0l.336.336a.713.713,0,0,1,0,1.009Zm0,0" transform="translate(5.78 6.516)" fill="#718086"/>
+</svg>
