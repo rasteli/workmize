@@ -10,6 +10,7 @@ export interface InputProps {
   placeholder?: string
   size?: "xs" | "sm" | "md" | "lg"
   onChange?: React.ChangeEventHandler<HTMLInputElement>
+  _focus?: React.CSSProperties
 }
 
 export function Input({
@@ -20,7 +21,8 @@ export function Input({
   type = "text",
   required = false,
   readOnly = false,
-  color = "#718086"
+  color = "#718086",
+  _focus
 }: InputProps) {
   const backgroundColor = useColorModeValue("#EDF2F7", "#0F1016")
 
@@ -40,6 +42,7 @@ export function Input({
       onChange={onChange}
       isReadOnly={readOnly}
       required={required}
+      _focus={_focus}
       _placeholder={{ color }}
     />
   )

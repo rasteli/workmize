@@ -20,8 +20,10 @@ export const GET_CURRENT_USER = gql`
 `
 
 export const GET_TASKS = gql`
-  query GetTasks($filterBy: FilterBy!) {
-    getTasks(TaskFilter: { filterBy: $filterBy }) {
+  query GetTasks($filterBy: FilterBy!, $search: String!, $skip: Float!) {
+    getTasks(
+      TaskFilter: { filterBy: $filterBy, search: $search, skip: $skip }
+    ) {
       nodes {
         name
         id
@@ -31,6 +33,18 @@ export const GET_TASKS = gql`
           id
           avatar
         }
+      }
+    }
+  }
+`
+
+export const GET_USERS = gql`
+  query GetUsers($limit: Float!, $search: String!) {
+    getUsers(UserFilter: { limit: $limit, search: $search }) {
+      nodes {
+        id
+        name
+        avatar
       }
     }
   }

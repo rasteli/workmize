@@ -152,6 +152,7 @@ export function UserForm({
         items={roles}
         inputSize={inputSize}
         gap={gap}
+        defaultAction
       />
       <Button
         type="submit"

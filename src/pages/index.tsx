@@ -18,10 +18,12 @@ import { UserInfoCard } from "../components/UserInfoCard"
 import { ToggleColorMode } from "../components/ToggleColorMode"
 import { CreateTaskModal } from "../components/CreateTaskModal"
 
+import { useTask } from "../contexts/TaskContext"
 import { withAuth } from "../components/AuthenticationHOC"
 
 function Home() {
   const { aboveThreshold } = useViewport(756)
+  const { taskLoading, userLoading } = useTask()
 
   const [cardOpen, setCardOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -31,6 +33,10 @@ function Home() {
   const containerBg = useColorModeValue("#F6F7FB", "#22242E")
   const WorkmizeIso = useColorModeValue(WorkmizeIsoLight, WorkmizeIsoDark)
   const homeIconBoxShadow = useColorModeValue("0px 2px 5px #0000001C", "none")
+
+  if (taskLoading || userLoading) {
+    return <div />
+  }
 
   return (
     <>

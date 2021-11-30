@@ -2,21 +2,25 @@ import "moment/locale/pt-br"
 
 import { useState } from "react"
 import { SingleDatePicker } from "react-dates"
-import { IconButton } from "@chakra-ui/button"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
 
+import { useTask } from "../../contexts/TaskContext"
 import { useRootStyles } from "../../hooks/useRootStyles"
 import { PreviousButton, NextButton } from "../PaginationControlButtons"
 
 export interface CalendarProps {
+  fullWidth?: boolean
   placeholder?: string
 }
 
-export function Calendar({ placeholder }: CalendarProps) {
+export function Calendar({ placeholder, fullWidth = false }: CalendarProps) {
   const [isFocused, setIsFocused] = useState(false)
-  const [date, setDate] = useState<moment.Moment | null>(null)
+  const {
+    completionDate,
+    setters: { setCompletionDate }
+  } = useTask()
 
   const bgColor = useColorModeValue("#edf2f7", "#0F1016")
   const textColor = useColorModeValue("#22242e", "#718086")
@@ -48,14 +52,15 @@ export function Calendar({ placeholder }: CalendarProps) {
   return (
     <SingleDatePicker
       id="calendar"
-      date={date}
+      date={completionDate}
       numberOfMonths={1}
       focused={isFocused}
       weekDayFormat="ddd"
       noBorder
+      block={fullWidth}
       inputIconPosition="after"
       showDefaultInputIcon={isFocused}
-      onDateChange={date => setDate(date)}
+      onDateChange={date => setCompletionDate(date)}
       placeholder={isFocused ? "dd/mm/aa" : placeholder}
       onFocusChange={({ focused }) => setIsFocused(focused)}
       renderNavPrevButton={({ onClick, disabled }) => (

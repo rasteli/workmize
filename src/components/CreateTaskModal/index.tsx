@@ -8,7 +8,9 @@ import { Input } from "../Input"
 import { Button } from "../Button"
 import { Combobox } from "../Combobox"
 import { Calendar } from "../Calendar"
-// import { useAuth } from "../../contexts/AuthContext"
+import { useTask } from "../../contexts/TaskContext"
+import { useCheckbox } from "../../hooks/useCheckbox"
+import { UserComboboxSelect } from "../UserComboboxSelect"
 
 import Check from "../../assets/check.svg"
 
@@ -27,7 +29,18 @@ interface CreateTaskModalProps {
 }
 
 export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
-  const items = ["User1", "User2", "User3", "User4"]
+  const { users } = useTask()
+  const [checkedItems, toggleItem] = useCheckbox(users)
+
+  const items = users.map((user, index) => (
+    <UserComboboxSelect
+      key={user.id}
+      user={user}
+      index={index}
+      toggleItem={toggleItem}
+      checked={checkedItems[index]}
+    />
+  ))
 
   const User = useColorModeValue(UserLight, UserDark)
   const Task = useColorModeValue(TaskLight, TaskDark)
@@ -45,21 +58,24 @@ export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
         </>
       }
     >
-      <form style={{ display: "flex", flexDirection: "column" }}>
+      <form style={styles.form}>
         <div style={styles.inputBlock(15)}>
           <Label value="Nome" />
           <Input placeholder="Nome da tarefa" />
         </div>
         <div style={styles.inputBlock(15)}>
           <Combobox
-            label="Responsáveis"
+            searchable
             items={items}
-            placeholder="Nome da tarefa"
+            defaultAction={false}
+            label="Responsáveis"
+            position="absolute"
+            placeholder="Adicione um ou vários"
           />
         </div>
         <div style={styles.inputBlock(15)}>
           <Label value="Entrega" />
-          <Calendar placeholder="Selecione ou digite uma data" />
+          <Calendar placeholder="Selecione ou digite uma data" fullWidth />
         </div>
 
         <Button label="Criar tarefa" type="submit" />

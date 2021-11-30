@@ -33,6 +33,7 @@ export function TablePaginationControl({
       <PreviousButton
         canPreviousPage={canPreviousPage}
         previousPage={previousPage}
+        labeled
       />
 
       <div style={styles.page}>
@@ -43,7 +44,7 @@ export function TablePaginationControl({
         de {pageCount}
       </div>
 
-      <NextButton canNextPage={canNextPage} nextPage={nextPage} />
+      <NextButton canNextPage={canNextPage} nextPage={nextPage} labeled />
     </footer>
   )
 }

@@ -3,7 +3,7 @@ const withPlugins = require("next-compose-plugins")
 
 const nextConfig = {
   images: {
-    domains: ["avatars.githubusercontent.com"]
+    domains: ["avatars.githubusercontent.com", "hiring-api.workmize.com"]
   }
 }
 

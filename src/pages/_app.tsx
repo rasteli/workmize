@@ -9,6 +9,8 @@ import { ChakraProvider } from "@chakra-ui/react"
 
 import { theme } from "../theme"
 import { client } from "../services/api"
+
+import { TaskProvider } from "../contexts/TaskContext"
 import { AuthContextProvider } from "../contexts/AuthContext"
 import { ComboboxProvider } from "../contexts/ComboboxContext"
 
@@ -18,7 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AuthContextProvider>
         <ChakraProvider theme={theme}>
           <ComboboxProvider>
-            <Component {...pageProps} />
+            <TaskProvider>
+              <Component {...pageProps} />
+            </TaskProvider>
           </ComboboxProvider>
         </ChakraProvider>
       </AuthContextProvider>

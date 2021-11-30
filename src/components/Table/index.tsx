@@ -6,6 +6,10 @@ import { useColorModeValue } from "@chakra-ui/color-mode"
 import { styles } from "./styles"
 
 import { useViewport } from "../../hooks/useViewport"
+import { useCheckbox } from "../../hooks/useCheckbox"
+
+import { formatDate } from "../../utils/formateDate"
+import { useTask } from "../../contexts/TaskContext"
 import { TableFirstColumn } from "../TableFirstColumn"
 import { TablePaginationControl } from "../TablePaginationControl"
 
@@ -14,11 +18,13 @@ import Unchecked from "../../assets/check_unchecked.svg"
 
 interface CustomColumn {
   col1: React.ReactNode
-  col2: string
+  col2: string[]
   col3: string
 }
 
 export function Table() {
+  const { tasks } = useTask()
+
   const { aboveThreshold } = useViewport(756)
   const fontSize = aboveThreshold ? 16 : 12
 
@@ -28,51 +34,18 @@ export function Table() {
   const borderColor = useColorModeValue("#1719234D", "#464750")
   const checkboxBorder = useColorModeValue("#22242E", "#F9F9FB")
 
-  const data = useMemo(
-    () => [
-      {
-        col1: "Hello",
-        col2: "World",
-        col3: "AAAA"
-      },
-      {
-        col1: "react-table",
-        col2: "rocks",
-        col3: "AAAA"
-      },
-      {
-        col1: "whatever",
-        col2: "you want",
-        col3: "AAAA"
-      },
-      {
-        col1: "Hello",
-        col2: "World",
-        col3: "AAAA"
-      },
-      {
-        col1: "react-table",
-        col2: "rocks",
-        col3: "AAAA"
-      },
-      {
-        col1: "whatever",
-        col2: "you want",
-        col3: "AAAA"
-      },
-      {
-        col1: "whatever",
-        col2: "you want",
-        col3: "AAAA"
-      },
-      {
-        col1: "whatever",
-        col2: "you want",
-        col3: "AAAA"
+  const data = useMemo(() => {
+    return tasks.map(task => {
+      return {
+        col1: task.name,
+        col2: task.users.map(user => user.avatar),
+        col3: formatDate(task.completionDate)
       }
-    ],
-    []
-  )
+    })
+  }, [tasks])
+
+  const [completedItems, toggleCompletedItem] = useCheckbox(data)
+  const [checkedItems, toggleItem, toggleAllItems] = useCheckbox(data)
 
   const columns: Column<CustomColumn>[] = useMemo(
     () => [
@@ -94,43 +67,8 @@ export function Table() {
         accessor: "col3"
       }
     ],
-    [checkboxBorder]
+    [checkboxBorder, toggleAllItems]
   )
-
-  const [completedItems, setCompletedItems] = useState<boolean[]>(
-    Array(data.length).fill(false)
-  )
-  const [checkedItems, setCheckedItems] = useState<boolean[]>(
-    Array(data.length).fill(false)
-  )
-
-  function toggleAllItems(checked: boolean) {
-    setCheckedItems(Array(data.length).fill(checked))
-  }
-
-  function toggleItem(checked: boolean, index: number) {
-    setCheckedItems(items => {
-      const newItems = items.filter((item, indexInArray) => {
-        return indexInArray !== index
-      })
-
-      newItems.splice(index, 0, checked)
-
-      return newItems
-    })
-  }
-
-  function toggleCompletedItem(checked: boolean, index: number) {
-    setCompletedItems(items => {
-      const newItems = items.filter((item, indexInArray) => {
-        return indexInArray !== index
-      })
-
-      newItems.splice(index, 0, checked)
-
-      return newItems
-    })
-  }
 
   const {
     page,

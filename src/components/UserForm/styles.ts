@@ -5,6 +5,7 @@ export const styles = {
   } as React.CSSProperties,
 
   inputBlock: (gap: number): React.CSSProperties => ({
-    marginBottom: gap
+    marginBottom: gap,
+    position: "relative"
   })
 }
