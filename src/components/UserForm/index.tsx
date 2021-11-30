@@ -147,7 +147,12 @@ export function UserForm({
         {invalidField && <InvalidLabel />}
       </div>
 
-      <Combobox items={roles} inputSize={inputSize} gap={gap} />
+      <Combobox
+        label="Permissão"
+        items={roles}
+        inputSize={inputSize}
+        gap={gap}
+      />
       <Button
         type="submit"
         marginTop={20}

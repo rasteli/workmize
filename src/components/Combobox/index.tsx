@@ -16,11 +16,19 @@ import ArrowLight from "../../assets/arrow_light.svg"
 
 export interface ComboboxProps {
   items: any[]
+  label: string
   gap?: number
-  inputSize: "xs" | "sm" | "md" | "lg"
+  placeholder?: string
+  inputSize?: "xs" | "sm" | "md" | "lg"
 }
 
-export function Combobox({ items, inputSize, gap }: ComboboxProps) {
+export function Combobox({
+  items,
+  label,
+  inputSize,
+  placeholder,
+  gap
+}: ComboboxProps) {
   const color = useColorModeValue("#22242E", "#FFFFFF")
   const backgroundColor = useColorModeValue("#EDF2F7", "#0F1016")
 
@@ -47,7 +55,7 @@ export function Combobox({ items, inputSize, gap }: ComboboxProps) {
 
   return (
     <div style={{ marginBottom: gap }}>
-      <Label value="Permissão" required {...getLabelProps()} />
+      <Label value={label} required {...getLabelProps()} />
       {!isOpen ? (
         <div {...getComboboxProps()}>
           <InputGroup {...getToggleButtonProps()}>
@@ -55,6 +63,7 @@ export function Combobox({ items, inputSize, gap }: ComboboxProps) {
               size={inputSize}
               value={selectedItem}
               color={color}
+              placeholder={placeholder}
               readOnly
               {...getInputProps()}
             />
@@ -68,8 +77,8 @@ export function Combobox({ items, inputSize, gap }: ComboboxProps) {
         </div>
       ) : (
         <ul
-          {...getMenuProps()}
           style={styles.comboboxMenuStyle(color, backgroundColor)}
+          {...getMenuProps()}
         >
           {items.map((item, index) => (
             <li

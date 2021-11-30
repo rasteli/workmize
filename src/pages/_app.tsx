@@ -1,3 +1,8 @@
+import "react-dates/initialize"
+import "react-dates/lib/css/_datepicker.css"
+
+import "../styles/react_dates_override.css"
+
 import { AppProps } from "next/app"
 import { ApolloProvider } from "@apollo/client"
 import { ChakraProvider } from "@chakra-ui/react"

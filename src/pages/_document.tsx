@@ -6,7 +6,7 @@ import { theme } from "../theme"
 export default class Document extends NextDocument {
   render() {
     return (
-      <Html lang="pt">
+      <Html lang="pt-br">
         <Head>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link

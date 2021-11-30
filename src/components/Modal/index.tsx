@@ -13,11 +13,12 @@ export function Modal({ children, header, setOpen }: ModalProps) {
   const mainBg = useColorModeValue("#fff", "#22242E")
   const mainText = useColorModeValue("#22242E", "#fff")
   const headerBg = useColorModeValue("#BCA8E9", "#31274F")
+  const innerContainerBg = useColorModeValue("#F7FAFC", "#171923")
 
   return (
     <>
       <div style={styles.backdrop}></div>
-      <div style={styles.container}>
+      <div style={styles.outerContainer}>
         <header style={styles.header(headerBg)}>
           {header}
           <CloseButton
@@ -26,8 +27,9 @@ export function Modal({ children, header, setOpen }: ModalProps) {
             onClick={() => setOpen(false)}
           />
         </header>
-
-        <main style={styles.main(mainText, mainBg)}>{children}</main>
+        <main style={styles.main(mainText, mainBg)}>
+          <div style={styles.innerContainer(innerContainerBg)}>{children}</div>
+        </main>
       </div>
     </>
   )

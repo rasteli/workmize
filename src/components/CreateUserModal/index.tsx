@@ -16,7 +16,6 @@ interface CreateUserModalProps {
 
 export function CreateUserModal({ open, setOpen }: CreateUserModalProps) {
   const { signUp, createLoading } = useAuth()
-  const containerBg = useColorModeValue("#F7FAFC", "#171923")
 
   if (!open) return null
 
@@ -30,21 +29,19 @@ export function CreateUserModal({ open, setOpen }: CreateUserModalProps) {
         </>
       }
     >
-      <div style={styles.container(containerBg)}>
-        <h1>Dados do seu usuário</h1>
-        <div style={styles.imageWrapper}>
-          <UserImage
-            src="https://avatars.githubusercontent.com/u/59903124?v=4"
-            size={110}
-          />
-        </div>
-        <UserForm
-          type="signup"
-          buttonLabel="Criar usuário"
-          onSubmit={signUp}
-          buttonIsLoading={createLoading}
+      <h1>Dados do seu usuário</h1>
+      <div style={styles.imageWrapper}>
+        <UserImage
+          src="https://avatars.githubusercontent.com/u/59903124?v=4"
+          size={110}
         />
       </div>
+      <UserForm
+        type="signup"
+        buttonLabel="Criar usuário"
+        onSubmit={signUp}
+        buttonIsLoading={createLoading}
+      />
     </Modal>
   )
 }

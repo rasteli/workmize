@@ -16,12 +16,15 @@ import { UserImage } from "../components/UserImage"
 import { FilterButton } from "../components/FilterButton"
 import { UserInfoCard } from "../components/UserInfoCard"
 import { ToggleColorMode } from "../components/ToggleColorMode"
+import { CreateTaskModal } from "../components/CreateTaskModal"
 
 import { withAuth } from "../components/AuthenticationHOC"
 
 function Home() {
   const { aboveThreshold } = useViewport(756)
+
   const [cardOpen, setCardOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const borderBg = useColorModeValue("#C8C8C8", "#464750")
   const homeIconBg = useColorModeValue("#FFFFFF", "#171923")
@@ -93,6 +96,7 @@ function Home() {
               width="150px"
               marginBottom={25}
               marginTop={45}
+              onClick={() => setModalOpen(true)}
             />
           </header>
           <Table />
@@ -105,6 +109,8 @@ function Home() {
           )}
         </main>
       </div>
+
+      <CreateTaskModal open={modalOpen} setOpen={setModalOpen} />
     </>
   )
 }

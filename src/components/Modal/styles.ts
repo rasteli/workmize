@@ -11,7 +11,7 @@ export const styles = {
     backdropFilter: "blur(10px)"
   } as React.CSSProperties,
 
-  container: {
+  outerContainer: {
     display: "flex",
     flexDirection: "column",
 
@@ -35,6 +35,18 @@ export const styles = {
     boxShadow: "none",
     background: "none"
   } as React.CSSProperties,
+
+  innerContainer: (backgroundColor: string): React.CSSProperties => ({
+    display: "flex",
+    flexDirection: "column",
+
+    backgroundColor,
+    borderRadius: 20,
+
+    width: "100%",
+    padding: 20,
+    margin: "30px 20px"
+  }),
 
   header: (backgroundColor: string): React.CSSProperties => ({
     display: "flex",

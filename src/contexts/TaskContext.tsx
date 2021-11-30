@@ -45,6 +45,7 @@ interface TaskContextData {
   createTask(args: CreateTaskArgs): Promise<void>
   updateTask(args: UpdateTaskArgs): Promise<void>
   toggleTaskCompletion(taskId: string): Promise<void>
+  setFilter: React.Dispatch<React.SetStateAction<string>>
 }
 
 const TaskContext = createContext({} as TaskContextData)
@@ -55,9 +56,15 @@ export function useTask() {
 
 export function TaskProvider({ children }: TaskProviderProps) {
   const { user } = useAuth()
+
+  const [filter, setFilter] = useState("ALL")
   const [tasks, setTasks] = useState<Task[]>([])
 
   const { refetch } = useQuery(GET_TASKS, {
+    variables: {
+      filterBy: filter
+    },
+
     onCompleted: data => {
       if (user) setTasks(data.getTasks.nodes)
     }
@@ -135,6 +142,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
     updateLoading,
     deleteLoading,
 
+    setFilter,
     deleteTask,
     createTask,
     updateTask,

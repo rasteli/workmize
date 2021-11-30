@@ -1,3 +1,7 @@
+import "react-dates/initialize"
+import "react-dates/lib/css/_datepicker.css"
+import "../src/styles/react_dates_override.css"
+
 import { theme } from "../src/theme"
 
 import * as nextImage from "next/image"

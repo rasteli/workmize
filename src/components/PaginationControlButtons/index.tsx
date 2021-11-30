@@ -1,19 +1,23 @@
-import { IconButton, IconButtonProps } from "@chakra-ui/react"
+import { IconButton, ButtonProps } from "@chakra-ui/react"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
-import { Button, ButtonProps } from "../Button"
+import { Button } from "../Button"
 import { useViewport } from "../../hooks/useViewport"
 
 import Chevron from "../../assets/chevron.svg"
 
 interface PreviousButtonProps {
+  labeled?: boolean
   canPreviousPage: boolean
-  previousPage: () => void
+  style?: React.CSSProperties
+  previousPage: (() => void) | React.MouseEventHandler<Element>
 }
 
 interface NextButtonProps {
+  labeled?: boolean
   canNextPage: boolean
-  nextPage: () => void
+  style?: React.CSSProperties
+  nextPage: (() => void) | React.MouseEventHandler<Element>
 }
 
 function ControlButton(props) {
@@ -21,21 +25,20 @@ function ControlButton(props) {
   const buttonBg = useColorModeValue("#A0AEC0", "#22242E")
   const buttonText = useColorModeValue("#F8F8F8", "#718086")
 
-  return aboveThreshold ? (
+  return aboveThreshold && props.labeled ? (
     <Button
       color={buttonText}
       backgroundColor={buttonBg}
-      label="Anterior"
       width="150px"
       {...props}
     />
   ) : (
     <IconButton
-      color={buttonText}
       backgroundColor={buttonBg}
       icon={<Chevron style={{ transform: "scale(0.5)" }} />}
       aria-label="control button"
       width="50px"
+      _focus={{ boxShadow: "none" }}
       {...props}
     />
   )
@@ -43,20 +46,36 @@ function ControlButton(props) {
 
 export function PreviousButton({
   canPreviousPage,
-  previousPage
+  previousPage,
+  labeled,
+  style
 }: PreviousButtonProps) {
   return (
     <ControlButton
       disabled={!canPreviousPage}
       onClick={previousPage}
       height="40px"
-      style={{ transform: "scaleX(-1)" }}
+      label="Anterior"
+      style={{ transform: "scaleX(-1)", ...style }}
+      labeled={labeled}
     />
   )
 }
 
-export function NextButton({ canNextPage, nextPage }: NextButtonProps) {
+export function NextButton({
+  canNextPage,
+  nextPage,
+  labeled,
+  style
+}: NextButtonProps) {
   return (
-    <ControlButton disabled={!canNextPage} onClick={nextPage} height="40px" />
+    <ControlButton
+      disabled={!canNextPage}
+      onClick={nextPage}
+      height="40px"
+      label="Próxima"
+      labeled={labeled}
+      style={style}
+    />
   )
 }

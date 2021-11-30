@@ -1,16 +1,4 @@
 export const styles = {
-  container: (backgroundColor: string): React.CSSProperties => ({
-    display: "flex",
-    flexDirection: "column",
-
-    backgroundColor,
-    borderRadius: 20,
-
-    width: "100%",
-    padding: 20,
-    margin: "30px 20px"
-  }),
-
   imageWrapper: {
     display: "flex",
     alignSelf: "center",
