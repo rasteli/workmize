@@ -119,7 +119,8 @@ export function Table() {
   return (
     <div style={styles.container(dra_containerBg)}>
       <header style={styles.header}>
-        ({data.length} {data.length > 1 ? "tarefas" : "tarefa"})
+        ({data.length}{" "}
+        {data.length > 1 || data.length === 0 ? "tarefas" : "tarefa"})
       </header>
 
       <table style={styles.table(tab_tableBg, fontSize)} {...getTableProps()}>
