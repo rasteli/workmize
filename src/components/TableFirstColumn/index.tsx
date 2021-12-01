@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Checkbox, IconButton, Input } from "@chakra-ui/react"
 
 import Order from "../../assets/order.svg"
@@ -25,9 +25,9 @@ export function TableFirstColumn({
     setters: { setTaskSearch }
   } = useTask()
 
-  const { aboveThreshold } = useViewport(1230)
   const [order, setOrder] = useState(false)
   const [search, setSearch] = useState(false)
+  const { aboveThreshold } = useViewport(1230)
 
   const rotateInDeg = order ? "-180" : "0"
   const searchInputWIdth = aboveThreshold ? "15%" : "50%"
@@ -46,12 +46,7 @@ export function TableFirstColumn({
   }
 
   return (
-    <div
-      style={{
-        ...styles.container
-      }}
-      onClick={closeSearch}
-    >
+    <div style={styles.container} onClick={closeSearch}>
       <Checkbox
         colorScheme="gray"
         isChecked={allChecked}
@@ -90,7 +85,7 @@ export function TableFirstColumn({
           }}
           autoFocus
           onChange={e => setTaskSearch(e.target.value)}
-          _focus={{ borderColor: "#A0AEC0", position: "absolute" }}
+          _focus={{ borderColor: "#A0AEC0" }}
         />
       )}
     </div>

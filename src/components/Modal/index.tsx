@@ -1,8 +1,8 @@
 import { CloseButton } from "@chakra-ui/react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
 import { useViewport } from "../../hooks/useViewport"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 export interface ModalProps {
   header: React.ReactNode
@@ -12,18 +12,20 @@ export interface ModalProps {
 
 export function Modal({ children, header, setOpen }: ModalProps) {
   const { aboveThreshold } = useViewport(1230)
-  const translateY = aboveThreshold ? -50 : -60
+  const {
+    dra_headerBg,
+    mod_mainBg,
+    mod_mainText,
+    mod_innerContainerBg
+  } = useWorkmizeColorMode()
 
-  const mainBg = useColorModeValue("#fff", "#22242E")
-  const mainText = useColorModeValue("#22242E", "#fff")
-  const headerBg = useColorModeValue("#BCA8E9", "#31274F")
-  const innerContainerBg = useColorModeValue("#F7FAFC", "#171923")
+  const translateY = aboveThreshold ? -50 : -60
 
   return (
     <>
-      <div style={styles.backdrop}></div>
+      <div style={styles.backdrop} />
       <div style={styles.outerContainer(translateY)}>
-        <header style={styles.header(headerBg)}>
+        <header style={styles.header(dra_headerBg)}>
           {header}
           <CloseButton
             style={styles.closeButton}
@@ -31,8 +33,10 @@ export function Modal({ children, header, setOpen }: ModalProps) {
             onClick={() => setOpen(false)}
           />
         </header>
-        <main style={styles.main(mainText, mainBg)}>
-          <div style={styles.innerContainer(innerContainerBg)}>{children}</div>
+        <main style={styles.main(mod_mainText, mod_mainBg)}>
+          <div style={styles.innerContainer(mod_innerContainerBg)}>
+            {children}
+          </div>
         </main>
       </div>
     </>

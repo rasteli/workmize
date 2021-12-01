@@ -1,6 +1,5 @@
 import Head from "next/head"
 import { useState } from "react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "../styles/pages/login"
 
@@ -10,26 +9,15 @@ import { useAuth } from "../contexts/AuthContext"
 import { useViewport } from "../hooks/useViewport"
 import { CreateUserModal } from "../components/CreateUserModal"
 import { ToggleColorMode } from "../components/ToggleColorMode"
+import { useWorkmizeColorMode } from "../hooks/useWorkmizeColorMode"
 
 import Worktime from "../assets/worktime.svg"
-import WorkmizeDark from "../assets/workmize_dark.svg"
-import WorkmizeLight from "../assets/workmize_light.svg"
 
 export default function Login() {
-  const asideBackground = {
-    light:
-      "transparent linear-gradient(138deg, #B794F4 0%, #805AD5 100%, #312950 100%, #322659 100%) 0% 0% no-repeat padding-box",
-    dark:
-      "transparent linear-gradient(138deg, #805AD5 0%, #312950 100%, #322659 100%) 0% 0% no-repeat padding-box"
-  }
-
+  const [open, setOpen] = useState(false)
   const { aboveThreshold } = useViewport(1230)
   const { logIn, loginLoading, message } = useAuth()
-
-  const [open, setOpen] = useState(false)
-  const mainBg = useColorModeValue("#FFFFFF", "#171923")
-  const Workmize = useColorModeValue(WorkmizeLight, WorkmizeDark)
-  const asideBg = useColorModeValue(asideBackground.light, asideBackground.dark)
+  const { dra_containerBg, loginAsideBg, Workmize } = useWorkmizeColorMode()
 
   return (
     <>
@@ -39,7 +27,7 @@ export default function Login() {
       </Head>
 
       <div style={styles.container}>
-        <main style={styles.main(mainBg, aboveThreshold)}>
+        <main style={styles.main(dra_containerBg, aboveThreshold)}>
           <Workmize style={styles.logo} />
           <ToggleColorMode style={styles.toggleColorMode} />
 
@@ -72,7 +60,7 @@ export default function Login() {
         </main>
 
         {aboveThreshold && (
-          <aside style={styles.aside(asideBg)}>
+          <aside style={styles.aside(loginAsideBg)}>
             <Worktime style={styles.worktime} />
             <h1 style={styles.h1}>Gerencie as suas tarefas</h1>
           </aside>

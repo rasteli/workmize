@@ -5,13 +5,18 @@ export const styles = {
     boxShadow: "3px 3px 10px #00000080"
   }),
 
-  header: (backgroundColor: string): React.CSSProperties => ({
+  drawerHeader: (backgroundColor: string): React.CSSProperties => ({
     backgroundColor,
 
     width: "100%",
     color: "#FFFFFF",
     padding: 25
   }),
+
+  drawerBody: {
+    display: "flex",
+    flexDirection: "column"
+  } as React.CSSProperties,
 
   closeButton: (backgroundColor: string): React.CSSProperties => ({
     backgroundColor,

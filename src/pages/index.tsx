@@ -1,13 +1,10 @@
 import Head from "next/head"
 import { useState } from "react"
 import { Box } from "@chakra-ui/react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "../styles/pages/Dashboard"
 
 import HomeIcon from "../assets/home.svg"
-import WorkmizeIsoDark from "../assets/workmize_iso_dark.svg"
-import WorkmizeIsoLight from "../assets/workmize_iso_light.svg"
 
 import { Table } from "../components/Table"
 import { Toast } from "../components/Toast"
@@ -22,21 +19,23 @@ import { CreateTaskModal } from "../components/CreateTaskModal"
 import { useTask } from "../contexts/TaskContext"
 import { useAuth } from "../contexts/AuthContext"
 import { withAuth } from "../components/AuthenticationHOC"
+import { useWorkmizeColorMode } from "../hooks/useWorkmizeColorMode"
 
 function Home() {
   const { user } = useAuth()
   const { aboveThreshold } = useViewport(756)
   const { taskLoading, userLoading, setters, message } = useTask()
+  const {
+    dra_containerBg,
+    dash_borderBg,
+    dash_containerBg,
+    boxShadow,
+    WorkmizeIso
+  } = useWorkmizeColorMode()
 
   const [cardOpen, setCardOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [toastOpen, setToastOpen] = useState(false)
-
-  const borderBg = useColorModeValue("#C8C8C8", "#464750")
-  const homeIconBg = useColorModeValue("#FFFFFF", "#171923")
-  const containerBg = useColorModeValue("#F6F7FB", "#22242E")
-  const WorkmizeIso = useColorModeValue(WorkmizeIsoLight, WorkmizeIsoDark)
-  const homeIconBoxShadow = useColorModeValue("0px 2px 5px #0000001C", "none")
 
   if (taskLoading || userLoading) {
     return <div />
@@ -53,10 +52,10 @@ function Home() {
         <meta charSet="utf-8" />
       </Head>
 
-      <div style={styles.container(containerBg)}>
+      <div style={styles.container(dash_containerBg)}>
         {aboveThreshold && (
           <aside style={styles.aside}>
-            <div style={styles.homeIcon(homeIconBg, homeIconBoxShadow)}>
+            <div style={styles.homeIcon(dra_containerBg, boxShadow)}>
               <HomeIcon />
             </div>
             <div style={styles.asideBottom}>
@@ -69,7 +68,7 @@ function Home() {
           </aside>
         )}
 
-        <main style={styles.main(borderBg)}>
+        <main style={styles.main(dash_borderBg)}>
           <header style={styles.header}>
             <div style={styles.userInfo}>
               <UserImage src={user?.avatar || "no-photo.jpg"} size={40} />

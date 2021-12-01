@@ -1,21 +1,19 @@
 import { IconButton } from "@chakra-ui/button"
 import { SlideFade } from "@chakra-ui/transition"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
 import { useTask, Task } from "../../contexts/TaskContext"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 import Trash from "../../assets/trash.svg"
-import CheckDark from "../../assets/check_dark.svg"
-import CheckLight from "../../assets/check_light.svg"
 import Complete from "../../assets/check_unchecked.svg"
 
 export interface BottomToastProps {
   tasks: Task[]
   open: boolean
   taskCount: number
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
   toggleSelection(checked: boolean): void
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function BottomToast({
@@ -26,10 +24,7 @@ export function BottomToast({
   toggleSelection
 }: BottomToastProps) {
   const { deleteTask, toggleTaskCompletion } = useTask()
-
-  const Check = useColorModeValue(CheckLight, CheckDark)
-  const mainBg = useColorModeValue("#FFFFFF", "#0F1016")
-  const headerBg = useColorModeValue("#E2E8F0", "#464750")
+  const { Check, bt_headerBg, bt_mainBg } = useWorkmizeColorMode()
 
   if (!open) return null
 
@@ -72,7 +67,7 @@ export function BottomToast({
 
   return (
     <SlideFade in={open} style={styles.container}>
-      <header style={styles.header(headerBg)}>
+      <header style={styles.header(bt_headerBg)}>
         <Check style={styles.check} />
         <p style={styles.title}>
           {taskCount} {pluralOrSingularTitle}
@@ -85,7 +80,7 @@ export function BottomToast({
           Limpar
         </button>
       </header>
-      <main style={styles.main(mainBg)}>
+      <main style={styles.main(bt_mainBg)}>
         <div style={styles.taskActionBlock("#48BB78")}>
           <IconButton
             icon={<Complete />}

@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useRouter } from "next/router"
 import { useQuery } from "@apollo/client"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 import { InputGroup, InputRightElement } from "@chakra-ui/input"
 
 import { Input } from "../Input"
@@ -11,12 +10,10 @@ import { Combobox } from "../Combobox"
 
 import { GET_COMPANY_ID } from "../../GraphQL/queries"
 import { useCustomCombobox } from "../../contexts/ComboboxContext"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 import { LogInFunction, SignUpFunction } from "../../contexts/AuthContext"
 
 import { styles } from "./styles"
-
-import EyeDark from "../../assets/eye_dark.svg"
-import EyeLight from "../../assets/eye_light.svg"
 
 interface UserFormProps {
   type: "signup" | "login"
@@ -49,7 +46,7 @@ export function UserForm({
 
   const router = useRouter()
   const { role } = useCustomCombobox()
-  const Eye = useColorModeValue(EyeLight, EyeDark)
+  const { Eye } = useWorkmizeColorMode()
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")

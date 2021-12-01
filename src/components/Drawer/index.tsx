@@ -7,7 +7,6 @@ import {
   IconButton
 } from "@chakra-ui/react"
 import { useState, useEffect } from "react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { Toast } from "../Toast"
 import { Label } from "../Label"
@@ -19,6 +18,7 @@ import { useCheckbox } from "../../hooks/useCheckbox"
 import { useTask, Task } from "../../contexts/TaskContext"
 import { UserComboboxSelect } from "../UserComboboxSelect"
 import { getSelectedUsers } from "../../utils/getSelectedUsers"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 import { styles } from "./styles"
 
@@ -46,11 +46,12 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
   const [disabled, setDisabled] = useState(true)
   const [toastOpen, setToastOpen] = useState(false)
 
-  const headerBg = useColorModeValue("#BCA8E9", "#31274F")
-  const containerBg = useColorModeValue("#FFFFFF", "#171923")
-  const closeButtonBg = useColorModeValue("#A0AEC0", "#464750")
-
   const selectedUsers = getSelectedUsers(users, checkedItems)
+  const {
+    dra_headerBg,
+    dra_containerBg,
+    dra_closeButtonBg
+  } = useWorkmizeColorMode()
 
   useEffect(() => {
     if (name !== task?.name || checkedItems.some(Boolean) || completionDate) {
@@ -101,7 +102,7 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
       variant="customWidth"
     >
       <DrawerOverlay />
-      <DrawerContent style={styles.container(containerBg)}>
+      <DrawerContent style={styles.container(dra_containerBg)}>
         {message && (
           <Toast
             open={toastOpen}
@@ -114,15 +115,15 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
         <IconButton
           icon={<Chevron />}
           aria-label="close button"
-          style={styles.closeButton(closeButtonBg)}
+          style={styles.closeButton(dra_closeButtonBg)}
           onClick={close}
         />
 
-        <DrawerHeader style={styles.header(headerBg)}>
+        <DrawerHeader style={styles.drawerHeader(dra_headerBg)}>
           Visualizar tarefa
         </DrawerHeader>
 
-        <DrawerBody style={{ display: "flex", flexDirection: "column" }}>
+        <DrawerBody style={styles.drawerBody}>
           <div>
             {task.isDone ? (
               <Checked style={styles.checked} onClick={toggleTask} />

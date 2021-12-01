@@ -1,8 +1,8 @@
 export const styles = {
-  inputBlock: (gap: number): React.CSSProperties => ({
-    marginBottom: gap,
+  inputBlock: {
+    marginBottom: 15,
     position: "relative"
-  }),
+  } as React.CSSProperties,
 
   form: {
     display: "flex",

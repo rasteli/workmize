@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react"
 import { Checkbox, Text } from "@chakra-ui/react"
 import { Column, useTable, usePagination } from "react-table"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
 
 import { useViewport } from "../../hooks/useViewport"
 import { useCheckbox } from "../../hooks/useCheckbox"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 import { Drawer } from "../Drawer"
 import { UserImage } from "../UserImage"
@@ -29,16 +29,18 @@ export function Table() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [drawerTaskIndex, setDrawerTaskIndex] = useState(0)
   const [bottomToastOpen, setBottomToastOpen] = useState(false)
+
   const { tasks, toggleTaskCompletion } = useTask()
+  const {
+    dra_containerBg,
+    tab_oddBg,
+    tab_tableBg,
+    tab_borderColor,
+    tab_checkboxBorder
+  } = useWorkmizeColorMode()
 
   const { aboveThreshold } = useViewport(756)
   const fontSize = aboveThreshold ? 16 : 12
-
-  const oddBg = useColorModeValue("#F2F2F2", "#1C1E27")
-  const tableBg = useColorModeValue("#F9F9FB", "#22242E")
-  const containerBg = useColorModeValue("#FFFFFF", "#171923")
-  const borderColor = useColorModeValue("#1719234D", "#464750")
-  const checkboxBorder = useColorModeValue("#22242E", "#F9F9FB")
 
   const data = useMemo(() => {
     return tasks.map(task => {
@@ -60,7 +62,7 @@ export function Table() {
         Header: (
           <TableFirstColumn
             allChecked={checkedItems.length > 0 && checkedItems.every(Boolean)}
-            checkboxStyles={styles.checkbox(checkboxBorder)}
+            checkboxStyles={styles.checkbox(tab_checkboxBorder)}
             onChange={e => {
               toggleAllItems(e.target.checked)
               setBottomToastOpen(true)
@@ -78,7 +80,7 @@ export function Table() {
         accessor: "col3"
       }
     ],
-    [checkboxBorder, toggleAllItems, checkedItems]
+    [tab_checkboxBorder, toggleAllItems, checkedItems]
   )
 
   const {
@@ -115,17 +117,19 @@ export function Table() {
   }
 
   return (
-    <div style={styles.container(containerBg)}>
-      <header style={styles.header}>({data.length} tarefas)</header>
+    <div style={styles.container(dra_containerBg)}>
+      <header style={styles.header}>
+        ({data.length} {data.length > 1 ? "tarefas" : "tarefa"})
+      </header>
 
-      <table style={styles.table(tableBg, fontSize)} {...getTableProps()}>
-        <thead style={styles.thead(borderColor)}>
+      <table style={styles.table(tab_tableBg, fontSize)} {...getTableProps()}>
+        <thead style={styles.thead(tab_borderColor)}>
           {headerGroups.map((headerGroup, hIndex) => (
             <tr key={hIndex} {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, cIndex) => (
                 <th
                   key={cIndex}
-                  style={styles.th(cIndex, borderColor)}
+                  style={styles.th(cIndex, tab_borderColor)}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}
@@ -137,7 +141,7 @@ export function Table() {
         <tbody {...getTableBodyProps()}>
           {page.map((row, rIndex) => {
             prepareRow(row)
-            const backgroundColor = rIndex % 2 === 0 ? tableBg : oddBg
+            const backgroundColor = rIndex % 2 === 0 ? tab_tableBg : tab_oddBg
 
             return (
               <tr
@@ -158,7 +162,7 @@ export function Table() {
                         <>
                           <Checkbox
                             colorScheme="gray"
-                            style={styles.checkbox(checkboxBorder)}
+                            style={styles.checkbox(tab_checkboxBorder)}
                             isChecked={checkedItems[rIndex]}
                             onChange={e =>
                               handleSelection(e.target.checked, rIndex)

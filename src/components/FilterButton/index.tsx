@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { Button } from "../Button"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 interface FilterButtonProps {
   label: string
@@ -10,18 +10,15 @@ interface FilterButtonProps {
 
 export function FilterButton({ label, onClick }: FilterButtonProps) {
   const [pressed, setPressed] = useState(false)
-
-  const text = useColorModeValue("#22242E", "#e2e4e6")
-  const buttonBg = useColorModeValue("#e2e4e6", "#2F353D")
-  const buttonPressedBg = useColorModeValue("#D6BCFA", "#322659")
+  const { fb_text, fb_buttonBg, fb_buttonPressedBg } = useWorkmizeColorMode()
 
   return (
     <Button
       label={label}
       marginRight={8}
-      color={pressed ? text : "#8D99A7"}
+      color={pressed ? fb_text : "#8D99A7"}
       marginBottom={5}
-      backgroundColor={pressed ? buttonPressedBg : buttonBg}
+      backgroundColor={pressed ? fb_buttonPressedBg : fb_buttonBg}
       onClick={e => {
         onClick(e)
         setPressed(!pressed)

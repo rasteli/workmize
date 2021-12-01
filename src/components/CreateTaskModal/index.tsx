@@ -11,7 +11,6 @@ import { Calendar } from "../Calendar"
 import { useTask } from "../../contexts/TaskContext"
 import { useCheckbox } from "../../hooks/useCheckbox"
 import { UserComboboxSelect } from "../UserComboboxSelect"
-
 import { getSelectedUsers } from "../../utils/getSelectedUsers"
 
 import Check from "../../assets/check.svg"
@@ -64,14 +63,14 @@ export function CreateTaskModal({
       }
     >
       <form style={styles.form} onSubmit={handleSubmit}>
-        <div style={styles.inputBlock(15)}>
+        <div style={styles.inputBlock}>
           <Label value="Nome" />
           <Input
             placeholder="Nome da tarefa"
             onChange={e => setName(e.target.value)}
           />
         </div>
-        <div style={styles.inputBlock(15)}>
+        <div style={styles.inputBlock}>
           <Combobox
             searchable
             items={items}
@@ -81,7 +80,7 @@ export function CreateTaskModal({
             placeholder="Adicione um ou vários"
           />
         </div>
-        <div style={styles.inputBlock(15)}>
+        <div style={styles.inputBlock}>
           <Label value="Entrega" />
           <Calendar placeholder="Selecione ou digite uma data" fullWidth />
         </div>

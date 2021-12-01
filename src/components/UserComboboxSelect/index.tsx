@@ -1,10 +1,10 @@
 import { Checkbox } from "@chakra-ui/react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
 
 import { UserImage } from "../UserImage"
 import { User } from "../../contexts/AuthContext"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 interface UserComboboxSelect {
   user: User
@@ -19,7 +19,7 @@ export function UserComboboxSelect({
   checked,
   toggleItem
 }: UserComboboxSelect) {
-  const borderColor = useColorModeValue("#000", "#FFFFFF")
+  const { usrCombo_borderColor } = useWorkmizeColorMode()
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     toggleItem(e.target.checked, index)
@@ -31,7 +31,7 @@ export function UserComboboxSelect({
         colorScheme="gray"
         isChecked={checked}
         onChange={handleChange}
-        style={styles.checkbox(borderColor)}
+        style={styles.checkbox(usrCombo_borderColor)}
       />
       <UserImage src={user.avatar} size={25} />
       <p style={styles.p}>{user.name}</p>

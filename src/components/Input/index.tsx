@@ -1,5 +1,7 @@
 import { Input as ChakraInput } from "@chakra-ui/react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
+
+import { styles } from "./styles"
 
 export interface InputProps {
   type?: string
@@ -24,17 +26,11 @@ export function Input({
   color = "#718086",
   _focus
 }: InputProps) {
-  const backgroundColor = useColorModeValue("#EDF2F7", "#0F1016")
-
-  const style: React.CSSProperties = {
-    border: 0,
-    color,
-    backgroundColor
-  }
+  const { cal_bgColor } = useWorkmizeColorMode()
 
   return (
     <ChakraInput
-      style={style}
+      style={styles.input(color, cal_bgColor)}
       placeholder={placeholder}
       type={type}
       size={size}

@@ -1,10 +1,6 @@
-import { useColorModeValue } from "@chakra-ui/color-mode"
-
 import { styles } from "./styles"
-
-import Chevron from "../../assets/chevron.svg"
-
 import { PreviousButton, NextButton } from "../PaginationControlButtons"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 interface PaginationControlProps {
   canNextPage: boolean
@@ -18,15 +14,14 @@ interface PaginationControlProps {
 }
 
 export function TablePaginationControl({
-  canNextPage,
-  canPreviousPage,
   pageIndex,
   pageCount,
   nextPage,
-  previousPage
+  previousPage,
+  canNextPage,
+  canPreviousPage
 }: PaginationControlProps) {
-  const currentPageBg = useColorModeValue("#FFFFFF", "#22242E")
-  const boxShadow = useColorModeValue("0px 2px 5px #0000001C", "none")
+  const { mod_mainBg, boxShadow } = useWorkmizeColorMode()
 
   return (
     <footer style={styles.container}>
@@ -38,7 +33,7 @@ export function TablePaginationControl({
 
       <div style={styles.page}>
         Página{" "}
-        <span style={styles.currentPage(currentPageBg, boxShadow)}>
+        <span style={styles.currentPage(mod_mainBg, boxShadow)}>
           {pageIndex + 1}
         </span>{" "}
         de {pageCount}

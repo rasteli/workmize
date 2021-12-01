@@ -1,22 +1,13 @@
 import { useCombobox } from "downshift"
 import { ScaleFade } from "@chakra-ui/transition"
-import { useColorModeValue } from "@chakra-ui/color-mode"
-import { InputGroup, InputRightElement } from "@chakra-ui/input"
+import { InputGroup, InputRightElement } from "@chakra-ui/react"
 
 import { styles } from "./styles"
 
 import { Input } from "../Input"
 import { Label } from "../Label"
 import { useCustomCombobox } from "../../contexts/ComboboxContext"
-
-import CheckDark from "../../assets/check_dark.svg"
-import CheckLight from "../../assets/check_light.svg"
-
-import ArrowDark from "../../assets/arrow_dark.svg"
-import ArrowLight from "../../assets/arrow_light.svg"
-
-import SearchDark from "../../assets/search_dark.svg"
-import SearchLight from "../../assets/search_light.svg"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 export interface ComboboxProps {
   items: any[]
@@ -41,14 +32,14 @@ export function Combobox({
   defaultAction,
   position
 }: ComboboxProps) {
-  const color = useColorModeValue("#22242E", "#718086")
-  const backgroundColor = useColorModeValue("#EDF2F7", "#0F1016")
-
-  const Check = useColorModeValue(CheckLight, CheckDark)
-  const Arrow = useColorModeValue(ArrowLight, ArrowDark)
-  const Search = useColorModeValue(SearchLight, SearchDark)
-
   const { setComboboxValue } = useCustomCombobox()
+  const {
+    cal_textColor,
+    cal_bgColor,
+    Arrow,
+    Check,
+    Search
+  } = useWorkmizeColorMode()
 
   const {
     isOpen,
@@ -91,7 +82,7 @@ export function Combobox({
       ) : (
         <ScaleFade
           in={isOpen}
-          style={styles.comboboxMenuStyle(color, backgroundColor, position)}
+          style={styles.comboboxMenuStyle(cal_textColor, cal_bgColor, position)}
           {...getMenuProps()}
         >
           {searchable && (

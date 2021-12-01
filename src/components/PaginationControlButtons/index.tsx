@@ -1,40 +1,40 @@
 import { IconButton, ButtonProps } from "@chakra-ui/react"
-import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { Button } from "../Button"
 import { useViewport } from "../../hooks/useViewport"
+import { useWorkmizeColorMode } from "../../hooks/useWorkmizeColorMode"
 
 import Chevron from "../../assets/chevron.svg"
 
-interface PreviousButtonProps {
+interface ControlButtonProps {
   labeled?: boolean
-  canPreviousPage: boolean
   style?: React.CSSProperties
+}
+
+interface PreviousButtonProps extends ControlButtonProps {
+  canPreviousPage: boolean
   previousPage: (() => void) | React.MouseEventHandler<Element>
 }
 
-interface NextButtonProps {
-  labeled?: boolean
+interface NextButtonProps extends ControlButtonProps {
   canNextPage: boolean
-  style?: React.CSSProperties
   nextPage: (() => void) | React.MouseEventHandler<Element>
 }
 
 function ControlButton(props) {
   const { aboveThreshold } = useViewport(756)
-  const buttonBg = useColorModeValue("#A0AEC0", "#22242E")
-  const buttonText = useColorModeValue("#F8F8F8", "#718086")
+  const { pagCB_buttonBg, pagCB_buttonText } = useWorkmizeColorMode()
 
   return aboveThreshold && props.labeled ? (
     <Button
-      color={buttonText}
-      backgroundColor={buttonBg}
+      color={pagCB_buttonText}
+      backgroundColor={pagCB_buttonBg}
       width="150px"
       {...props}
     />
   ) : (
     <IconButton
-      backgroundColor={buttonBg}
+      backgroundColor={pagCB_buttonBg}
       icon={<Chevron style={{ transform: "scale(0.5)" }} />}
       aria-label="control button"
       width="50px"
