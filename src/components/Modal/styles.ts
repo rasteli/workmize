@@ -11,7 +11,7 @@ export const styles = {
     backdropFilter: "blur(10px)"
   } as React.CSSProperties,
 
-  outerContainer: {
+  outerContainer: (translateY: number): React.CSSProperties => ({
     display: "flex",
     flexDirection: "column",
 
@@ -21,12 +21,12 @@ export const styles = {
 
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%)",
+    transform: `translate(-50%, ${translateY}%)`,
 
     zIndex: 10,
     borderRadius: 36,
     boxShadow: "0px 2px 10px #0000003D"
-  } as React.CSSProperties,
+  }),
 
   closeButton: {
     position: "absolute",

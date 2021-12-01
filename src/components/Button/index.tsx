@@ -36,7 +36,7 @@ export function Button({
   isFullWidth = false,
   backgroundColor = "#805AD5"
 }: ButtonProps) {
-  const style = styles.button(
+  const buttonStyle = styles.button(
     color,
     width,
     height,
@@ -52,7 +52,7 @@ export function Button({
     <ChakraButton
       size={size}
       type={type}
-      style={style}
+      style={buttonStyle}
       onClick={onClick}
       isLoading={loading}
       isDisabled={disabled}

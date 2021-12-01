@@ -55,6 +55,10 @@
   border: 2px solid var(--calendar-border-color);
 }
 
+.DayPicker_transitionContainer__horizontal {
+  max-height: 330px !important;
+}
+
 .DayPicker_weekHeader {
   text-transform: uppercase;
 }

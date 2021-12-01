@@ -1,13 +1,16 @@
 export const styles = {
   container: {
     width: "100%",
-    maxWidth: "450px",
+    maxWidth: "400px",
     borderRadius: 20,
     overflow: "hidden",
     boxShadow: "0px 3px 15px #00000099",
 
-    position: "absolute",
+    fontSize: 14,
+
+    zIndex: 5,
     bottom: 15,
+    position: "fixed",
     transform: "translate(50%)"
   } as React.CSSProperties,
 

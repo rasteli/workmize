@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client"
 
 import { useAuth, User } from "./AuthContext"
@@ -31,6 +31,7 @@ interface CreateTaskArgs {
 interface UpdateTaskArgs extends CreateTaskArgs {
   taskId: string
   isDone: boolean
+  completionDate: string
 }
 
 interface Setters {
@@ -42,9 +43,15 @@ interface Setters {
   setTaskFilter: React.Dispatch<React.SetStateAction<string>>
 }
 
+interface CompletionMessage {
+  text: string
+  type: "success" | "error"
+}
+
 interface TaskContextData {
   tasks: Task[]
   users: User[]
+  message: CompletionMessage
   completionDate: moment.Moment
 
   userLoading: boolean
@@ -53,6 +60,7 @@ interface TaskContextData {
   updateLoading: boolean
   deleteLoading: boolean
 
+  sortTasks(): void
   deleteTask(taskId: string): Promise<void>
   createTask(args: CreateTaskArgs): Promise<void>
   updateTask(args: UpdateTaskArgs): Promise<void>
@@ -80,13 +88,19 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const [users, setUsers] = useState<User[]>([])
   const [completionDate, setCompletionDate] = useState<moment.Moment>()
 
+  const [message, setMessage] = useState<CompletionMessage>()
+
   const [userLimit, setUserLimit] = useState(7)
   const [userSearch, setUserSearch] = useState("")
 
   const [taskSearch, setTaskSearch] = useState("")
   const [taskFilter, setTaskFilter] = useState("ALL")
 
-  const { refetch: userRefetch, loading: userLoading } = useQuery(GET_USERS, {
+  const {
+    refetch: userRefetch,
+    loading: userLoading,
+    data: userData
+  } = useQuery(GET_USERS, {
     variables: {
       limit: userLimit,
       search: userSearch
@@ -94,25 +108,17 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
     onCompleted: data => {
       if (user) setUsers(data.getUsers.nodes)
-    },
-    onError: error => {
-      console.log(error.message)
     }
   })
 
-  const { refetch: taskRefetch, loading: taskLoading } = useQuery(GET_TASKS, {
-    variables: {
-      filterBy: taskFilter,
-      search: taskSearch
-    },
-
-    onCompleted: data => {
-      if (user) setTasks(data.getTasks.nodes)
-    },
-    onError: error => {
-      console.log(error.message)
+  const { refetch: taskRefetch, loading: taskLoading, data } = useQuery(
+    GET_TASKS,
+    {
+      variables: {
+        filterBy: taskFilter
+      }
     }
-  })
+  )
 
   const [toggleTask] = useMutation(TOGGLE_TASK)
   const [addTask, { loading: createLoading }] = useMutation(CREATE_TASK)
@@ -123,12 +129,41 @@ export function TaskProvider({ children }: TaskProviderProps) {
     userRefetch()
   })
 
+  useEffect(() => {
+    function setTasksBySearch() {
+      if (user && data) {
+        const tasks = data.getTasks.nodes
+
+        setTasks(() => {
+          if (!taskSearch) return tasks
+
+          const searchedTasks = tasks.filter((task: Task) => {
+            return task.name.startsWith(taskSearch)
+          })
+
+          return searchedTasks
+        })
+      }
+    }
+
+    setTasksBySearch()
+  }, [user, taskSearch, data])
+
+  function sortTasks() {
+    const tasksCopy = [...tasks]
+    tasksCopy.sort((a, b) => (a < b ? 1 : -1))
+
+    setTasks(tasksCopy)
+  }
+
   async function deleteTask(taskId: string) {
     await removeTask({
       variables: {
         taskId
       }
     })
+
+    await taskRefetch()
   }
 
   async function toggleTaskCompletion(taskId: string) {
@@ -137,38 +172,56 @@ export function TaskProvider({ children }: TaskProviderProps) {
         taskId
       }
     })
+
+    await taskRefetch()
   }
 
   async function createTask({ name, responsible }: CreateTaskArgs) {
-    await addTask({
-      variables: {
-        name,
-        responsible,
-        completionDate: completionDate.format()
-      }
-    })
+    try {
+      await addTask({
+        variables: {
+          name,
+          responsible,
+          completionDate: completionDate.format()
+        }
+      })
+
+      await taskRefetch()
+      setMessage({ text: "Tarefa criada com sucesso!", type: "success" })
+    } catch {
+      setMessage({ text: "Error ao criar tarefa!", type: "error" })
+    }
   }
 
   async function updateTask({
     name,
     taskId,
     isDone,
-    responsible
+    responsible,
+    completionDate
   }: UpdateTaskArgs) {
-    await editTask({
-      variables: {
-        name,
-        taskId,
-        isDone,
-        responsible,
-        completionDate: completionDate.format()
-      }
-    })
+    try {
+      await editTask({
+        variables: {
+          name,
+          taskId,
+          isDone,
+          responsible,
+          completionDate
+        }
+      })
+
+      await taskRefetch()
+      setMessage({ text: "Tarefa editada com sucesso!", type: "success" })
+    } catch {
+      setMessage({ text: "Error ao editar tarefa!", type: "error" })
+    }
   }
 
   const value: TaskContextData = {
     tasks,
     users,
+    message,
     completionDate,
 
     userLoading,
@@ -177,6 +230,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
     updateLoading,
     deleteLoading,
 
+    sortTasks,
     deleteTask,
     createTask,
     updateTask,

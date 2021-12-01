@@ -13,7 +13,7 @@ export function useCheckbox(data: any[]): useCheckboxReturn {
 
   function toggleItem(checked: boolean, index: number) {
     setCheckedItems(items => {
-      const newItems = items.filter((item, indexInArray) => {
+      const newItems = items.filter((_, indexInArray) => {
         return indexInArray !== index
       })
 

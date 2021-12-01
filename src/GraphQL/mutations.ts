@@ -46,16 +46,16 @@ export const CREATE_TASK = gql`
 
 export const UPDATE_TASK = gql`
   mutation UpdateTask(
-    $id: String!
     $name: String!
+    $taskId: String!
     $isDone: Boolean!
     $responsible: [String!]!
     $completionDate: DateTime!
   ) {
     updateTask(
       UpdateTaskInput: {
-        taskId: $id
         name: $name
+        taskId: $taskId
         isDone: $isDone
         responsible: $responsible
         completionDate: $completionDate

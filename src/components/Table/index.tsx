@@ -8,6 +8,7 @@ import { styles } from "./styles"
 import { useViewport } from "../../hooks/useViewport"
 import { useCheckbox } from "../../hooks/useCheckbox"
 
+import { Drawer } from "../Drawer"
 import { UserImage } from "../UserImage"
 import { BottomToast } from "../BottomToast"
 import { formatDate } from "../../utils/formateDate"
@@ -25,8 +26,10 @@ interface CustomColumn {
 }
 
 export function Table() {
-  const [open, setOpen] = useState(false)
-  const { tasks, toggleTaskCompletion, taskRefetch } = useTask()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [drawerTaskIndex, setDrawerTaskIndex] = useState(0)
+  const [bottomToastOpen, setBottomToastOpen] = useState(false)
+  const { tasks, toggleTaskCompletion } = useTask()
 
   const { aboveThreshold } = useViewport(756)
   const fontSize = aboveThreshold ? 16 : 12
@@ -56,11 +59,11 @@ export function Table() {
       {
         Header: (
           <TableFirstColumn
-            allChecked={checkedItems.every(Boolean)}
+            allChecked={checkedItems.length > 0 && checkedItems.every(Boolean)}
             checkboxStyles={styles.checkbox(checkboxBorder)}
             onChange={e => {
               toggleAllItems(e.target.checked)
-              setOpen(true)
+              setBottomToastOpen(true)
             }}
           />
         ),
@@ -97,14 +100,18 @@ export function Table() {
     usePagination
   )
 
+  function openDrawer(index: number) {
+    setDrawerTaskIndex(index)
+    setDrawerOpen(true)
+  }
+
   function handleSelection(checked: boolean, index: number) {
     toggleItem(checked, index)
-    setOpen(true)
+    setBottomToastOpen(true)
   }
 
   async function toggleTask(index: number) {
     await toggleTaskCompletion(tasks[index].id)
-    await taskRefetch()
   }
 
   return (
@@ -138,45 +145,52 @@ export function Table() {
                 style={styles.tr(backgroundColor)}
                 {...row.getRowProps()}
               >
-                {row.cells.map((cell, cIndex) => (
-                  <td
-                    key={cIndex}
-                    style={styles.td(cIndex)}
-                    {...cell.getCellProps()}
-                  >
-                    {cIndex % 3 === 0 && (
-                      <>
-                        <Checkbox
-                          colorScheme="gray"
-                          style={styles.checkbox(checkboxBorder)}
-                          isChecked={checkedItems[rIndex]}
-                          onChange={e =>
-                            handleSelection(e.target.checked, rIndex)
-                          }
-                        />
+                {row.cells.map((cell, cIndex) => {
+                  const firstTableData = cIndex % 3 === 0
 
-                        {aboveThreshold &&
-                          (tasks[rIndex].isDone ? (
-                            <Checked
-                              style={{ cursor: "pointer" }}
-                              onClick={() => toggleTask(rIndex)}
-                            />
-                          ) : (
-                            <Unchecked
-                              style={{ cursor: "pointer" }}
-                              onClick={() => toggleTask(rIndex)}
-                            />
-                          ))}
-                      </>
-                    )}
-                    <Text
-                      style={{ marginLeft: aboveThreshold ? 15 : 0 }}
-                      isTruncated
+                  return (
+                    <td
+                      key={cIndex}
+                      style={styles.td(firstTableData)}
+                      {...cell.getCellProps()}
                     >
-                      {cell.render("Cell")}
-                    </Text>
-                  </td>
-                ))}
+                      {firstTableData && (
+                        <>
+                          <Checkbox
+                            colorScheme="gray"
+                            style={styles.checkbox(checkboxBorder)}
+                            isChecked={checkedItems[rIndex]}
+                            onChange={e =>
+                              handleSelection(e.target.checked, rIndex)
+                            }
+                          />
+
+                          {aboveThreshold &&
+                            (tasks[rIndex].isDone ? (
+                              <Checked
+                                style={styles.checked}
+                                onClick={() => toggleTask(rIndex)}
+                              />
+                            ) : (
+                              <Unchecked
+                                style={styles.checked}
+                                onClick={() => toggleTask(rIndex)}
+                              />
+                            ))}
+                        </>
+                      )}
+                      <Text
+                        isTruncated
+                        style={styles.tdChild(firstTableData, aboveThreshold)}
+                        onClick={
+                          firstTableData ? () => openDrawer(rIndex) : null
+                        }
+                      >
+                        {cell.render("Cell")}
+                      </Text>
+                    </td>
+                  )
+                })}
               </tr>
             )
           })}
@@ -192,9 +206,15 @@ export function Table() {
         canPreviousPage={canPreviousPage}
       />
 
+      <Drawer
+        open={drawerOpen}
+        setOpen={setDrawerOpen}
+        task={tasks[drawerTaskIndex]}
+      />
+
       <BottomToast
-        open={open}
-        setOpen={setOpen}
+        open={bottomToastOpen}
+        setOpen={setBottomToastOpen}
         toggleSelection={toggleAllItems}
         tasks={tasks.filter((_, index) => checkedItems[index])}
         taskCount={checkedItems.filter(Boolean).length}

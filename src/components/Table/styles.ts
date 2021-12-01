@@ -10,7 +10,8 @@ export const styles = {
 
     width: "100%",
     padding: 20,
-    borderRadius: 20
+    borderRadius: 20,
+    position: "relative"
   }),
 
   header: {
@@ -54,10 +55,30 @@ export const styles = {
     borderColor
   }),
 
-  td: (cIndex: number): React.CSSProperties => ({
+  td: (firstTableData: boolean): React.CSSProperties => ({
     padding: 20,
+    minWidth: "25vw",
     maxWidth: "30vw",
+    position: "relative",
 
-    display: cIndex % 3 === 0 ? "flex" : "table-cell"
-  })
+    display: firstTableData ? "flex" : "table-cell"
+  }),
+
+  tdChild: (
+    firstTableData: boolean,
+    aboveThreshold: boolean
+  ): React.CSSProperties => ({
+    marginLeft: aboveThreshold ? 30 : 0,
+    cursor: firstTableData ? "pointer" : "default"
+  }),
+
+  checked: {
+    cursor: "pointer",
+    position: "absolute",
+
+    zIndex: 5,
+    left: 50,
+
+    transform: "scale(1.1)"
+  } as React.CSSProperties
 }

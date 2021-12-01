@@ -10,7 +10,6 @@ interface UserComboboxSelect {
   user: User
   index: number
   checked: boolean
-  onToggle?: () => void
   toggleItem(checked: boolean, index: number): void
 }
 
@@ -18,15 +17,12 @@ export function UserComboboxSelect({
   user,
   index,
   checked,
-  onToggle,
   toggleItem
 }: UserComboboxSelect) {
   const borderColor = useColorModeValue("#000", "#FFFFFF")
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     toggleItem(e.target.checked, index)
-
-    if (ontoggle) onToggle()
   }
 
   return (

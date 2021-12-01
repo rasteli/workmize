@@ -20,8 +20,8 @@ export const GET_CURRENT_USER = gql`
 `
 
 export const GET_TASKS = gql`
-  query GetTasks($filterBy: FilterBy!, $search: String!) {
-    getTasks(TaskFilter: { filterBy: $filterBy, search: $search }) {
+  query GetTasks($filterBy: FilterBy!) {
+    getTasks(TaskFilter: { filterBy: $filterBy }) {
       nodes {
         name
         id
@@ -29,6 +29,7 @@ export const GET_TASKS = gql`
         completionDate
         users {
           id
+          name
           avatar
         }
       }

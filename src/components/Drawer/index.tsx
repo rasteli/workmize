@@ -1,5 +1,3 @@
-import "./textarea.css"
-
 import {
   Drawer as ChakraDrawer,
   DrawerBody,
@@ -8,17 +6,19 @@ import {
   DrawerContent,
   IconButton
 } from "@chakra-ui/react"
+import { useState, useEffect } from "react"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
+import { Toast } from "../Toast"
 import { Label } from "../Label"
+import { Button } from "../Button"
 import { Combobox } from "../Combobox"
 import { Calendar } from "../Calendar"
-import { Task } from "../../contexts/TaskContext"
-import { useTask } from "../../contexts/TaskContext"
+import { formatDate } from "../../utils/formateDate"
 import { useCheckbox } from "../../hooks/useCheckbox"
+import { useTask, Task } from "../../contexts/TaskContext"
 import { UserComboboxSelect } from "../UserComboboxSelect"
-
-import { getResponsibleUsers } from "../../utils/getResponsibleUsers"
+import { getSelectedUsers } from "../../utils/getSelectedUsers"
 
 import { styles } from "./styles"
 
@@ -33,19 +33,34 @@ export interface DrawerProps {
 }
 
 export function Drawer({ task, open, setOpen }: DrawerProps) {
-  const users = task.users
-
+  const {
+    users,
+    toggleTaskCompletion,
+    updateTask,
+    completionDate,
+    message
+  } = useTask()
   const [checkedItems, toggleItem] = useCheckbox(users)
-  const { toggleTaskCompletion, taskRefetch, updateTask } = useTask()
 
-  const responsible = getResponsibleUsers(users, checkedItems)
+  const [name, setName] = useState(task?.name)
+  const [disabled, setDisabled] = useState(true)
+  const [toastOpen, setToastOpen] = useState(false)
 
-  const taskProps = {
-    name: task.name,
-    isDone: task.isDone,
-    taskId: task.id,
-    responsible
-  }
+  const headerBg = useColorModeValue("#BCA8E9", "#31274F")
+  const containerBg = useColorModeValue("#FFFFFF", "#171923")
+  const closeButtonBg = useColorModeValue("#A0AEC0", "#464750")
+
+  const selectedUsers = getSelectedUsers(users, checkedItems)
+
+  useEffect(() => {
+    if (name !== task?.name || checkedItems.some(Boolean) || completionDate) {
+      setDisabled(false)
+    }
+  }, [task, name, selectedUsers, completionDate, checkedItems])
+
+  if (!task) return null
+
+  const responsibleIds = task.users.map(user => user.id)
 
   const items = users.map((user, index) => (
     <UserComboboxSelect
@@ -53,19 +68,9 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
       user={user}
       index={index}
       toggleItem={toggleItem}
-      checked={checkedItems[index]}
-      onToggle={() =>
-        updateTask({
-          ...taskProps,
-          responsible: responsible.map(user => user.id)
-        })
-      }
+      checked={responsibleIds.includes(user.id) || checkedItems[index]}
     />
   ))
-
-  const headerBg = useColorModeValue("#BCA8E9", "#31274F")
-  const containerBg = useColorModeValue("#FFFFFF", "#171923")
-  const closeButtonBg = useColorModeValue("#A0AEC0", "#464750")
 
   function close() {
     setOpen(false)
@@ -73,7 +78,19 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
 
   async function toggleTask() {
     await toggleTaskCompletion(task.id)
-    await taskRefetch()
+  }
+
+  async function handleSave() {
+    await updateTask({
+      name,
+      taskId: task.id,
+      isDone: task.isDone,
+      completionDate: completionDate?.format() || task.completionDate,
+      responsible: [...responsibleIds, ...selectedUsers.map(user => user.id)]
+    })
+
+    setDisabled(true)
+    setToastOpen(true)
   }
 
   return (
@@ -85,6 +102,15 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
     >
       <DrawerOverlay />
       <DrawerContent style={styles.container(containerBg)}>
+        {message && (
+          <Toast
+            open={toastOpen}
+            setOpen={setToastOpen}
+            variant={message.type}
+            message={message.text}
+          />
+        )}
+
         <IconButton
           icon={<Chevron />}
           aria-label="close button"
@@ -96,33 +122,47 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
           Visualizar tarefa
         </DrawerHeader>
 
-        <DrawerBody>
+        <DrawerBody style={{ display: "flex", flexDirection: "column" }}>
           <div>
             {task.isDone ? (
               <Checked style={styles.checked} onClick={toggleTask} />
             ) : (
               <Unchecked style={styles.checked} onClick={toggleTask} />
             )}
-            <textarea className="task" rows={3} style={styles.textarea}>
-              {task.name}
-            </textarea>
+            <textarea
+              className="task"
+              rows={3}
+              style={styles.textarea}
+              onChange={e => setName(e.target.value)}
+              defaultValue={task.name}
+            />
           </div>
 
-          <div style={{ marginBottom: 20 }}>
+          <div style={styles.inputBlock}>
             <Combobox
               searchable
               items={items}
               defaultAction={false}
               label="Responsáveis"
               position="absolute"
-              placeholder={`${users.map(user => user.name)},`}
+              placeholder={`${task.users.map(
+                user => user.name
+              )}, ${selectedUsers.map(user => user.name)} `}
             />
           </div>
 
-          <div style={{ marginBottom: 20 }}>
+          <div style={styles.inputBlock}>
             <Label value="Entrega" />
-            <Calendar placeholder="Selecione ou digite uma data" fullWidth />
+            <Calendar placeholder={formatDate(task.completionDate)} fullWidth />
           </div>
+
+          <Button
+            label="Salvar"
+            isFullWidth
+            marginTop={20}
+            disabled={disabled}
+            onClick={handleSave}
+          />
         </DrawerBody>
       </DrawerContent>
     </ChakraDrawer>

@@ -1,6 +1,7 @@
 import "react-dates/initialize"
 import "react-dates/lib/css/_datepicker.css"
 
+import "../components/Drawer/textarea.css"
 import "../styles/react_dates_override.css"
 
 import { AppProps } from "next/app"

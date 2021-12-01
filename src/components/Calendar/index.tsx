@@ -49,34 +49,42 @@ export function Calendar({ placeholder, fullWidth = false }: CalendarProps) {
 
   useRootStyles(props, values)
 
+  function handleDateChange(date: moment.Moment) {
+    setCompletionDate(date)
+  }
+
   return (
-    <SingleDatePicker
-      id="calendar"
-      date={completionDate}
-      numberOfMonths={1}
-      focused={isFocused}
-      weekDayFormat="ddd"
-      noBorder
-      block={fullWidth}
-      inputIconPosition="after"
-      showDefaultInputIcon={isFocused}
-      onDateChange={date => setCompletionDate(date)}
-      placeholder={isFocused ? "dd/mm/aa" : placeholder}
-      onFocusChange={({ focused }) => setIsFocused(focused)}
-      renderNavPrevButton={({ onClick, disabled }) => (
-        <PreviousButton
-          previousPage={onClick}
-          canPreviousPage={!disabled}
-          style={{ ...styles.controlButton, left: 20 }}
-        />
-      )}
-      renderNavNextButton={({ onClick, disabled }) => (
-        <NextButton
-          nextPage={onClick}
-          canNextPage={!disabled}
-          style={{ ...styles.controlButton, right: 20 }}
-        />
-      )}
-    />
+    <>
+      <SingleDatePicker
+        id="calendar"
+        date={completionDate}
+        numberOfMonths={1}
+        focused={isFocused}
+        weekDayFormat="ddd"
+        noBorder
+        block={fullWidth}
+        inputIconPosition="after"
+        showDefaultInputIcon={isFocused}
+        onDateChange={handleDateChange}
+        placeholder={isFocused ? "dd/mm/aa" : placeholder}
+        onFocusChange={({ focused }) => setIsFocused(focused)}
+        renderNavPrevButton={({ onClick, disabled }) => (
+          <PreviousButton
+            previousPage={onClick}
+            canPreviousPage={!disabled}
+            style={{ ...styles.controlButton, left: 20 }}
+          />
+        )}
+        renderNavNextButton={({ onClick, disabled }) => (
+          <NextButton
+            nextPage={onClick}
+            canNextPage={!disabled}
+            style={{ ...styles.controlButton, right: 20 }}
+          />
+        )}
+      />
+
+      <div style={styles.spacer} />
+    </>
   )
 }

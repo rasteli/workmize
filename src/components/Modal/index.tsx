@@ -2,6 +2,7 @@ import { CloseButton } from "@chakra-ui/react"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "./styles"
+import { useViewport } from "../../hooks/useViewport"
 
 export interface ModalProps {
   header: React.ReactNode
@@ -10,6 +11,9 @@ export interface ModalProps {
 }
 
 export function Modal({ children, header, setOpen }: ModalProps) {
+  const { aboveThreshold } = useViewport(1230)
+  const translateY = aboveThreshold ? -50 : -60
+
   const mainBg = useColorModeValue("#fff", "#22242E")
   const mainText = useColorModeValue("#22242E", "#fff")
   const headerBg = useColorModeValue("#BCA8E9", "#31274F")
@@ -18,7 +22,7 @@ export function Modal({ children, header, setOpen }: ModalProps) {
   return (
     <>
       <div style={styles.backdrop}></div>
-      <div style={styles.outerContainer}>
+      <div style={styles.outerContainer(translateY)}>
         <header style={styles.header(headerBg)}>
           {header}
           <CloseButton

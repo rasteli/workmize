@@ -36,7 +36,9 @@ export const styles = {
     top: 110
   } as React.CSSProperties,
 
-  actionButtons: {} as React.CSSProperties,
+  inputBlock: {
+    marginBottom: 20
+  } as React.CSSProperties,
 
   textarea: {
     margin: 20,

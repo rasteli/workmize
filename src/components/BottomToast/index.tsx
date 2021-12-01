@@ -25,7 +25,7 @@ export function BottomToast({
   taskCount,
   toggleSelection
 }: BottomToastProps) {
-  const { deleteTask, toggleTaskCompletion, taskRefetch } = useTask()
+  const { deleteTask, toggleTaskCompletion } = useTask()
 
   const Check = useColorModeValue(CheckLight, CheckDark)
   const mainBg = useColorModeValue("#FFFFFF", "#0F1016")
@@ -45,8 +45,6 @@ export function BottomToast({
 
   async function resolve(promises: any[]) {
     await Promise.all(promises)
-    await taskRefetch()
-
     clearSelection()
   }
 
@@ -54,7 +52,9 @@ export function BottomToast({
     const promises = []
 
     tasks.map(task => {
-      promises.push(toggleTaskCompletion(task.id))
+      if (!task.isDone) {
+        promises.push(toggleTaskCompletion(task.id))
+      }
     })
 
     await resolve(promises)

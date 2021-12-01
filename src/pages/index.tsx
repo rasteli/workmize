@@ -10,6 +10,7 @@ import WorkmizeIsoDark from "../assets/workmize_iso_dark.svg"
 import WorkmizeIsoLight from "../assets/workmize_iso_light.svg"
 
 import { Table } from "../components/Table"
+import { Toast } from "../components/Toast"
 import { Button } from "../components/Button"
 import { useViewport } from "../hooks/useViewport"
 import { UserImage } from "../components/UserImage"
@@ -25,10 +26,11 @@ import { withAuth } from "../components/AuthenticationHOC"
 function Home() {
   const { user } = useAuth()
   const { aboveThreshold } = useViewport(756)
-  const { taskLoading, userLoading, setters } = useTask()
+  const { taskLoading, userLoading, setters, message } = useTask()
 
   const [cardOpen, setCardOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [toastOpen, setToastOpen] = useState(false)
 
   const borderBg = useColorModeValue("#C8C8C8", "#464750")
   const homeIconBg = useColorModeValue("#FFFFFF", "#171923")
@@ -39,6 +41,10 @@ function Home() {
   if (taskLoading || userLoading) {
     return <div />
   }
+
+  const isAdmin = user?.role === "ADMIN"
+
+  setters.setTaskFilter(isAdmin ? "ALL" : "CREATED_BY_ME")
 
   return (
     <>
@@ -66,7 +72,7 @@ function Home() {
         <main style={styles.main(borderBg)}>
           <header style={styles.header}>
             <div style={styles.userInfo}>
-              <UserImage src={user.avatar} size={40} />
+              <UserImage src={user?.avatar || "no-photo.jpg"} size={40} />
 
               <h1 style={styles.h1}>Minhas tarefas</h1>
 
@@ -76,7 +82,7 @@ function Home() {
                 onMouseLeave={() => setCardOpen(false)}
               >
                 <UserImage
-                  src={user.avatar}
+                  src={user?.avatar || "no-photo.jpg"}
                   size={70}
                   transition="0.2s"
                   _hover={{ borderRadius: 20 }}
@@ -91,7 +97,7 @@ function Home() {
 
               <div>
                 <FilterButton
-                  onClick={() => setters.setTaskFilter("ALL")}
+                  onClick={() => setters.setTaskFilter(isAdmin && "ALL")}
                   label="Todas"
                 />
                 <FilterButton
@@ -124,7 +130,19 @@ function Home() {
         </main>
       </div>
 
-      <CreateTaskModal open={modalOpen} setOpen={setModalOpen} />
+      <CreateTaskModal
+        open={modalOpen}
+        setOpen={setModalOpen}
+        setToastOpen={setToastOpen}
+      />
+      {message && (
+        <Toast
+          open={toastOpen}
+          setOpen={setToastOpen}
+          variant={message.type}
+          message={message.text}
+        />
+      )}
     </>
   )
 }

@@ -31,10 +31,7 @@ export function CreateUserModal({ open, setOpen }: CreateUserModalProps) {
     >
       <h1>Dados do seu usuário</h1>
       <div style={styles.imageWrapper}>
-        <UserImage
-          src="https://avatars.githubusercontent.com/u/59903124?v=4"
-          size={110}
-        />
+        <UserImage src="no-photo.jpg" size={110} />
       </div>
       <UserForm
         type="signup"

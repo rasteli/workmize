@@ -1,3 +1,7 @@
+.task {
+  background: none;
+}
+
 .task:focus {
   color: #ffffff;
   background: #332455;

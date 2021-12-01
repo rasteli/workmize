@@ -12,17 +12,22 @@ import { useTask } from "../../contexts/TaskContext"
 import { useCheckbox } from "../../hooks/useCheckbox"
 import { UserComboboxSelect } from "../UserComboboxSelect"
 
-import { getResponsibleUsers } from "../../utils/getResponsibleUsers"
+import { getSelectedUsers } from "../../utils/getSelectedUsers"
 
 import Check from "../../assets/check.svg"
 
 interface CreateTaskModalProps {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setToastOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
-  const { users, createTask, taskRefetch } = useTask()
+export function CreateTaskModal({
+  open,
+  setOpen,
+  setToastOpen
+}: CreateTaskModalProps) {
+  const { users, createTask, createLoading } = useTask()
   const [checkedItems, toggleItem] = useCheckbox(users)
   const [name, setName] = useState("")
 
@@ -38,14 +43,14 @@ export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
     />
   ))
 
-  const responsible = getResponsibleUsers(users, checkedItems)
+  const selectedUsers = getSelectedUsers(users, checkedItems)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    await createTask({ name, responsible: responsible.map(user => user.id) })
-    await taskRefetch()
+    await createTask({ name, responsible: selectedUsers.map(user => user.id) })
     setOpen(false)
+    setToastOpen(true)
   }
 
   return (
@@ -81,7 +86,7 @@ export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
           <Calendar placeholder="Selecione ou digite uma data" fullWidth />
         </div>
 
-        <Button label="Criar tarefa" type="submit" />
+        <Button label="Criar tarefa" type="submit" loading={createLoading} />
       </form>
     </Modal>
   )
