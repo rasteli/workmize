@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client"
 
-import { useAuth, User } from "./AuthContext"
+import { useAuth, User, CompletionMessage } from "./AuthContext"
 
 import {
   CREATE_TASK,
@@ -41,11 +41,6 @@ interface Setters {
 
   setTaskSearch: React.Dispatch<React.SetStateAction<string>>
   setTaskFilter: React.Dispatch<React.SetStateAction<string>>
-}
-
-interface CompletionMessage {
-  text: string
-  type: "success" | "error"
 }
 
 interface TaskContextData {

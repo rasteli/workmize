@@ -1,8 +1,7 @@
-import { useColorModeValue } from "@chakra-ui/color-mode"
-
 import { styles } from "./styles"
 
 import { Modal } from "../Modal"
+import { Alert } from "../Alert"
 import { UserForm } from "../UserForm"
 import { UserImage } from "../UserImage"
 import { useAuth } from "../../contexts/AuthContext"
@@ -15,7 +14,7 @@ interface CreateUserModalProps {
 }
 
 export function CreateUserModal({ open, setOpen }: CreateUserModalProps) {
-  const { signUp, createLoading } = useAuth()
+  const { signUp, createLoading, message } = useAuth()
 
   if (!open) return null
 
@@ -33,6 +32,9 @@ export function CreateUserModal({ open, setOpen }: CreateUserModalProps) {
       <div style={styles.imageWrapper}>
         <UserImage src="no-photo.jpg" size={110} />
       </div>
+
+      {message && <Alert label={message.text} variant={message.type} />}
+
       <UserForm
         type="signup"
         buttonLabel="Criar usuário"

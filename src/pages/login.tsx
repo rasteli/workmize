@@ -4,6 +4,7 @@ import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { styles } from "../styles/pages/login"
 
+import { Alert } from "../components/Alert"
 import { UserForm } from "../components/UserForm"
 import { useAuth } from "../contexts/AuthContext"
 import { useViewport } from "../hooks/useViewport"
@@ -23,7 +24,7 @@ export default function Login() {
   }
 
   const { aboveThreshold } = useViewport(1230)
-  const { logIn, loginLoading } = useAuth()
+  const { logIn, loginLoading, message } = useAuth()
 
   const [open, setOpen] = useState(false)
   const mainBg = useColorModeValue("#FFFFFF", "#171923")
@@ -47,6 +48,8 @@ export default function Login() {
             <h3 style={styles.h3}>
               Por favor, insira seus dados para prosseguir.
             </h3>
+
+            {message && <Alert label={message.text} variant={message.type} />}
 
             <UserForm
               gap={25}

@@ -35,7 +35,7 @@ export const styles = {
 
   h3: {
     fontSize: 14,
-    marginBottom: 50
+    marginBottom: 30
   } as React.CSSProperties,
 
   footer: {

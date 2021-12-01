@@ -5,6 +5,11 @@ import { LOGIN_USER } from "../GraphQL/mutations"
 import { CREATE_USER } from "../GraphQL/mutations"
 import { GET_CURRENT_USER } from "../GraphQL/queries"
 
+export interface CompletionMessage {
+  text: string
+  type: "success" | "error"
+}
+
 interface AuthenticationArgs {
   role: string
   email: string
@@ -33,6 +38,7 @@ export interface User {
 
 interface AuthContextData {
   user: User | null
+  message: CompletionMessage
 
   logIn: LogInFunction
   signUp: SignUpFunction
@@ -52,7 +58,13 @@ export function useAuth() {
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<User | null>(null)
-  const [createUser, { loading: createLoading }] = useMutation(CREATE_USER)
+  const [message, setMessage] = useState<CompletionMessage>()
+
+  const [createUser, { loading: createLoading }] = useMutation(CREATE_USER, {
+    onError: () => {
+      setMessage({ text: "Erro ao criar usuário!", type: "error" })
+    }
+  })
 
   const { client, refetch, loading: userLoading } = useQuery(GET_CURRENT_USER, {
     onCompleted: data => {
@@ -67,6 +79,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     onCompleted: async data => {
       localStorage.setItem("@workmize:token", data.signIn.token)
       await refetch()
+    },
+    onError: () => {
+      setMessage({
+        text: "Email ou senha inválidos, tente novamente.",
+        type: "error"
+      })
     }
   })
 
@@ -109,6 +127,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   const value: AuthContextData = {
     user,
+    message,
 
     logIn,
     signUp,
