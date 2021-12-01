@@ -151,6 +151,10 @@ export function Table() {
               >
                 {row.cells.map((cell, cIndex) => {
                   const firstTableData = cIndex % 3 === 0
+                  const isFirstPage = pageIndex === 0
+                  const taskIndex = isFirstPage
+                    ? rIndex
+                    : pageIndex * 6 + rIndex
 
                   return (
                     <td
@@ -163,9 +167,9 @@ export function Table() {
                           <Checkbox
                             colorScheme="gray"
                             style={styles.checkbox(tab_checkboxBorder)}
-                            isChecked={checkedItems[rIndex]}
+                            isChecked={checkedItems[taskIndex]}
                             onChange={e =>
-                              handleSelection(e.target.checked, rIndex)
+                              handleSelection(e.target.checked, taskIndex)
                             }
                           />
 

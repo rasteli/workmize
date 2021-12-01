@@ -150,6 +150,7 @@ export function UserForm({
         inputSize={inputSize}
         gap={gap}
         defaultAction
+        required
       />
       <Button
         type="submit"

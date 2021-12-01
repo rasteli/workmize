@@ -26,7 +26,7 @@ export function CreateTaskModal({
   setOpen,
   setToastOpen
 }: CreateTaskModalProps) {
-  const { users, createTask, createLoading } = useTask()
+  const { users, createTask, createLoading, setters } = useTask()
   const [checkedItems, toggleItem] = useCheckbox(users)
   const [name, setName] = useState("")
 
@@ -48,8 +48,9 @@ export function CreateTaskModal({
     e.preventDefault()
 
     await createTask({ name, responsible: selectedUsers.map(user => user.id) })
-    setOpen(false)
+    setters.setUserSearch("")
     setToastOpen(true)
+    setOpen(false)
   }
 
   return (
@@ -78,6 +79,7 @@ export function CreateTaskModal({
             label="Responsáveis"
             position="absolute"
             placeholder="Adicione um ou vários"
+            onChange={e => setters.setUserSearch(e.target.value)}
           />
         </div>
         <div style={styles.inputBlock}>

@@ -1,5 +1,5 @@
 import Head from "next/head"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Box } from "@chakra-ui/react"
 
 import { styles } from "../styles/pages/Dashboard"
@@ -24,7 +24,12 @@ import { useWorkmizeColorMode } from "../hooks/useWorkmizeColorMode"
 function Home() {
   const { user } = useAuth()
   const { aboveThreshold } = useViewport(756)
-  const { taskLoading, userLoading, setters, message } = useTask()
+  const {
+    taskLoading,
+    userLoading,
+    message,
+    setters: { setTaskFilter }
+  } = useTask()
   const {
     dra_containerBg,
     dash_borderBg,
@@ -37,13 +42,15 @@ function Home() {
   const [modalOpen, setModalOpen] = useState(false)
   const [toastOpen, setToastOpen] = useState(false)
 
+  const isAdmin = user?.role === "ADMIN"
+
+  useEffect(() => {
+    setTaskFilter(isAdmin ? "ALL" : "CREATED_BY_ME")
+  }, [isAdmin, setTaskFilter, user])
+
   if (taskLoading || userLoading) {
     return <div />
   }
-
-  const isAdmin = user?.role === "ADMIN"
-
-  setters.setTaskFilter(isAdmin ? "ALL" : "CREATED_BY_ME")
 
   return (
     <>
@@ -96,15 +103,15 @@ function Home() {
 
               <div>
                 <FilterButton
-                  onClick={() => setters.setTaskFilter(isAdmin && "ALL")}
+                  onClick={() => setTaskFilter(isAdmin && "ALL")}
                   label="Todas"
                 />
                 <FilterButton
-                  onClick={() => setters.setTaskFilter("CREATED_BY_ME")}
+                  onClick={() => setTaskFilter("CREATED_BY_ME")}
                   label="Criadas por mim"
                 />
                 <FilterButton
-                  onClick={() => setters.setTaskFilter("IAM_RESPONSIBLE")}
+                  onClick={() => setTaskFilter("IAM_RESPONSIBLE")}
                   label="Sou responsável"
                 />
               </div>

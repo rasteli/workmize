@@ -13,11 +13,13 @@ export interface ComboboxProps {
   items: any[]
   label: string
   gap?: number
+  required?: boolean
   placeholder?: string
   searchable?: boolean
   defaultAction?: boolean
   inputSize?: "xs" | "sm" | "md" | "lg"
   onClick?: React.MouseEventHandler<HTMLLIElement>
+  onChange?: React.ChangeEventHandler<HTMLInputElement>
   position?: "static" | "relative" | "absolute" | "sticky" | "fixed"
 }
 
@@ -26,6 +28,8 @@ export function Combobox({
   items,
   label,
   onClick,
+  onChange,
+  required,
   inputSize,
   searchable,
   placeholder,
@@ -59,7 +63,7 @@ export function Combobox({
 
   return (
     <div style={{ marginBottom: gap, position: "relative" }}>
-      <Label value={label} required {...getLabelProps()} />
+      <Label value={label} required={required} {...getLabelProps()} />
       {!isOpen ? (
         <div {...getComboboxProps()}>
           <InputGroup {...getToggleButtonProps()}>
@@ -88,7 +92,11 @@ export function Combobox({
           {searchable && (
             <div style={styles.searchInput}>
               <Search />
-              <Input placeholder="Buscar" _focus={{ boxShadow: "none" }} />
+              <Input
+                placeholder="Buscar"
+                _focus={{ boxShadow: "none" }}
+                onChange={onChange}
+              />
             </div>
           )}
 

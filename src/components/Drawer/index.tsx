@@ -40,12 +40,11 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
     completionDate,
     message
   } = useTask()
-  const [checkedItems, toggleItem] = useCheckbox(users)
-
   const [name, setName] = useState(task?.name)
   const [disabled, setDisabled] = useState(true)
   const [toastOpen, setToastOpen] = useState(false)
 
+  const [checkedItems, toggleItem] = useCheckbox(users)
   const selectedUsers = getSelectedUsers(users, checkedItems)
   const {
     dra_headerBg,
@@ -141,7 +140,6 @@ export function Drawer({ task, open, setOpen }: DrawerProps) {
 
           <div style={styles.inputBlock}>
             <Combobox
-              searchable
               items={items}
               defaultAction={false}
               label="Responsáveis"

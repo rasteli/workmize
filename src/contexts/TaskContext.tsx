@@ -1,8 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client"
-
-import { useAuth, User, CompletionMessage } from "./AuthContext"
-
 import {
   CREATE_TASK,
   UPDATE_TASK,
@@ -10,6 +7,8 @@ import {
   TOGGLE_TASK
 } from "../GraphQL/mutations"
 import { GET_TASKS, GET_USERS } from "../GraphQL/queries"
+import { useAuth, User, CompletionMessage } from "./AuthContext"
+import { filterArrayStartingWith } from "../utils/filterArrayStartingWith"
 
 interface TaskProviderProps {
   children: React.ReactNode
@@ -97,23 +96,19 @@ export function TaskProvider({ children }: TaskProviderProps) {
     data: userData
   } = useQuery(GET_USERS, {
     variables: {
-      limit: userLimit,
-      search: userSearch
-    },
-
-    onCompleted: data => {
-      if (user) setUsers(data.getUsers.nodes)
+      limit: userLimit
     }
   })
 
-  const { refetch: taskRefetch, loading: taskLoading, data } = useQuery(
-    GET_TASKS,
-    {
-      variables: {
-        filterBy: taskFilter
-      }
+  const {
+    refetch: taskRefetch,
+    loading: taskLoading,
+    data: taskData
+  } = useQuery(GET_TASKS, {
+    variables: {
+      filterBy: taskFilter
     }
-  )
+  })
 
   const [toggleTask] = useMutation(TOGGLE_TASK)
   const [addTask, { loading: createLoading }] = useMutation(CREATE_TASK)
@@ -125,16 +120,40 @@ export function TaskProvider({ children }: TaskProviderProps) {
   })
 
   useEffect(() => {
+    function setUsersBySearch() {
+      if (user && userData) {
+        const users = userData.getUsers.nodes
+
+        setUsers(() => {
+          if (!userSearch) return users
+
+          const searchedUsers = filterArrayStartingWith<User>(
+            users,
+            "name",
+            userSearch
+          )
+
+          return searchedUsers
+        })
+      }
+    }
+
+    setUsersBySearch()
+  }, [user, userData, userSearch])
+
+  useEffect(() => {
     function setTasksBySearch() {
-      if (user && data) {
-        const tasks = data.getTasks.nodes
+      if (user && taskData) {
+        const tasks = taskData.getTasks.nodes
 
         setTasks(() => {
           if (!taskSearch) return tasks
 
-          const searchedTasks = tasks.filter((task: Task) => {
-            return task.name.startsWith(taskSearch)
-          })
+          const searchedTasks = filterArrayStartingWith<Task>(
+            tasks,
+            "name",
+            taskSearch
+          )
 
           return searchedTasks
         })
@@ -142,7 +161,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
     }
 
     setTasksBySearch()
-  }, [user, taskSearch, data])
+  }, [user, taskData, taskSearch])
 
   function sortTasks() {
     const tasksCopy = [...tasks]
