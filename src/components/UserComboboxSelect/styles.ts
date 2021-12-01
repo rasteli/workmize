@@ -3,7 +3,7 @@ export const styles = {
     display: "flex",
     alignItems: "center",
 
-    height: 40
+    height: 45
   } as React.CSSProperties,
 
   p: {

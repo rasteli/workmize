@@ -16,7 +16,10 @@ export const styles = {
 
     position,
     zIndex: 5,
-    width: "100%"
+    width: "100%",
+    maxHeight: "400px",
+
+    overflowY: "scroll"
   }),
 
   item: {

@@ -32,6 +32,22 @@ export const theme = extendTheme({
         "--calendar-input-border-width": 0
       },
 
+      "::-webkit-scrollbar": {
+        width: "6px",
+        height: "6px"
+      },
+
+      "::-webkit-scrollbar-thumb": {
+        background: "none",
+        borderRadius: "30px"
+      },
+
+      "::-webkit-scrollbar-track": {
+        background: "none",
+        borderRadius: 0,
+        boxShadow: "inset 0px 0px 0px 0px #F0F0F0"
+      },
+
       body: {
         fontFamily: "Inter",
         bg: mode("#F6F7FB", "#22242E")(props)

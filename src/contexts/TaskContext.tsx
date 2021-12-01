@@ -84,7 +84,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
 
   const [message, setMessage] = useState<CompletionMessage>()
 
-  const [userLimit, setUserLimit] = useState(7)
+  const [userLimit, setUserLimit] = useState(42)
   const [userSearch, setUserSearch] = useState("")
 
   const [taskSearch, setTaskSearch] = useState("")
