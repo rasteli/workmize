@@ -20,10 +20,8 @@ export const GET_CURRENT_USER = gql`
 `
 
 export const GET_TASKS = gql`
-  query GetTasks($filterBy: FilterBy!, $search: String!, $skip: Float!) {
-    getTasks(
-      TaskFilter: { filterBy: $filterBy, search: $search, skip: $skip }
-    ) {
+  query GetTasks($filterBy: FilterBy!, $search: String!) {
+    getTasks(TaskFilter: { filterBy: $filterBy, search: $search }) {
       nodes {
         name
         id

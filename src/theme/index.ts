@@ -8,6 +8,19 @@ const config: ThemeConfig = {
 
 export const theme = extendTheme({
   config,
+  components: {
+    Drawer: {
+      variants: {
+        customWidth: {
+          dialog: {
+            minWidth: "370px",
+            maxWidth: "370px"
+          }
+        }
+      }
+    }
+  },
+
   styles: {
     global: (props: StyleFunctionProps) => ({
       ":root": {

@@ -1,4 +1,4 @@
-import { useColorModeValue } from "@chakra-ui/color-mode"
+import { useState } from "react"
 
 import { styles } from "./styles"
 
@@ -14,23 +14,15 @@ import { UserComboboxSelect } from "../UserComboboxSelect"
 
 import Check from "../../assets/check.svg"
 
-import UserDark from "../../assets/user.svg"
-import UserLight from "../../assets/user_light.svg"
-
-import TaskDark from "../../assets/task_dark.svg"
-import TaskLight from "../../assets/task_light.svg"
-
-import DateDark from "../../assets/date_dark.svg"
-import DateLight from "../../assets/date_light.svg"
-
 interface CreateTaskModalProps {
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
-  const { users } = useTask()
+  const { users, createTask, completionDate } = useTask()
   const [checkedItems, toggleItem] = useCheckbox(users)
+  const [name, setName] = useState("")
 
   const items = users.map((user, index) => (
     <UserComboboxSelect
@@ -42,11 +34,18 @@ export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
     />
   ))
 
-  const User = useColorModeValue(UserLight, UserDark)
-  const Task = useColorModeValue(TaskLight, TaskDark)
-  const Date = useColorModeValue(DateLight, DateDark)
+  const responsible = users.filter((user, index) => {
+    return checkedItems[index]
+  })
 
   if (!open) return null
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    await createTask({ name, responsible: responsible.map(user => user.id) })
+    setOpen(false)
+  }
 
   return (
     <Modal
@@ -58,10 +57,13 @@ export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
         </>
       }
     >
-      <form style={styles.form}>
+      <form style={styles.form} onSubmit={handleSubmit}>
         <div style={styles.inputBlock(15)}>
           <Label value="Nome" />
-          <Input placeholder="Nome da tarefa" />
+          <Input
+            placeholder="Nome da tarefa"
+            onChange={e => setName(e.target.value)}
+          />
         </div>
         <div style={styles.inputBlock(15)}>
           <Combobox

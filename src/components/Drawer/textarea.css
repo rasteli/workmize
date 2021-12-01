@@ -1,0 +1,6 @@
+.task:focus {
+  color: #ffffff;
+  background: #332455;
+  border-color: #332455;
+  opacity: 0.9;
+}

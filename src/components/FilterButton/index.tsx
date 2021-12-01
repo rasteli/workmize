@@ -5,9 +5,10 @@ import { Button } from "../Button"
 
 interface FilterButtonProps {
   label: string
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export function FilterButton({ label }: FilterButtonProps) {
+export function FilterButton({ label, onClick }: FilterButtonProps) {
   const [pressed, setPressed] = useState(false)
 
   const text = useColorModeValue("#22242E", "#e2e4e6")
@@ -21,7 +22,10 @@ export function FilterButton({ label }: FilterButtonProps) {
       color={pressed ? text : "#8D99A7"}
       marginBottom={5}
       backgroundColor={pressed ? buttonPressedBg : buttonBg}
-      onClick={() => setPressed(!pressed)}
+      onClick={e => {
+        onClick(e)
+        setPressed(!pressed)
+      }}
     />
   )
 }

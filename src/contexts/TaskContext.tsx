@@ -1,11 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client"
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback
-} from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 
 import { useAuth, User } from "./AuthContext"
 
@@ -44,7 +38,6 @@ interface Setters {
   setUserLimit: React.Dispatch<React.SetStateAction<number>>
   setCompletionDate: React.Dispatch<React.SetStateAction<moment.Moment>>
 
-  setTaskSkip: React.Dispatch<React.SetStateAction<number>>
   setTaskSearch: React.Dispatch<React.SetStateAction<string>>
   setTaskFilter: React.Dispatch<React.SetStateAction<string>>
 }
@@ -84,7 +77,6 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const [userLimit, setUserLimit] = useState(7)
   const [userSearch, setUserSearch] = useState("")
 
-  const [taskSkip, setTaskSkip] = useState(0)
   const [taskSearch, setTaskSearch] = useState("")
   const [taskFilter, setTaskFilter] = useState("ALL")
 
@@ -105,8 +97,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
   const { refetch: taskRefetch, loading: taskLoading } = useQuery(GET_TASKS, {
     variables: {
       filterBy: taskFilter,
-      search: taskSearch,
-      skip: taskSkip
+      search: taskSearch
     },
 
     onCompleted: data => {
@@ -125,6 +116,10 @@ export function TaskProvider({ children }: TaskProviderProps) {
   useEffect(() => {
     userRefetch()
   })
+
+  useEffect(() => {
+    taskRefetch()
+  }, [taskRefetch, taskFilter, taskSearch])
 
   async function deleteTask(taskId: string) {
     await removeTask({
@@ -190,7 +185,6 @@ export function TaskProvider({ children }: TaskProviderProps) {
       setUserSearch,
       setCompletionDate,
 
-      setTaskSkip,
       setTaskFilter,
       setTaskSearch
     }

@@ -31,13 +31,13 @@ export const LOGIN_USER = gql`
 export const CREATE_TASK = gql`
   mutation CreateTask(
     $name: String!
-    $responsibleIds: [String!]!
+    $responsible: [String!]!
     $completionDate: DateTime!
   ) {
     createTask(
       CreateTaskInput: {
         name: $name
-        responsible: $responsibleIds
+        responsible: $responsible
         completionDate: $completionDate
       }
     )

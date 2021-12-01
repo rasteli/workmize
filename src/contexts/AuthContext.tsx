@@ -38,6 +38,7 @@ interface AuthContextData {
   signUp: SignUpFunction
   logOut(): Promise<void>
 
+  userIsAdmin: boolean
   userLoading: boolean
   loginLoading: boolean
   createLoading: boolean
@@ -115,7 +116,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
     userLoading,
     loginLoading,
-    createLoading
+    createLoading,
+    userIsAdmin: user?.role === "ADMIN"
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

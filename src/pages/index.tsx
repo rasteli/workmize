@@ -23,7 +23,7 @@ import { withAuth } from "../components/AuthenticationHOC"
 
 function Home() {
   const { aboveThreshold } = useViewport(756)
-  const { taskLoading, userLoading } = useTask()
+  const { taskLoading, userLoading, setters } = useTask()
 
   const [cardOpen, setCardOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -91,9 +91,18 @@ function Home() {
               <h2 style={styles.h2}>FILTROS RÁPIDOS</h2>
 
               <div>
-                <FilterButton label="Todas" />
-                <FilterButton label="Criadas por mim" />
-                <FilterButton label="Sou responsável" />
+                <FilterButton
+                  onClick={() => setters.setTaskFilter("ALL")}
+                  label="Todas"
+                />
+                <FilterButton
+                  onClick={() => setters.setTaskFilter("CREATED_BY_ME")}
+                  label="Criadas por mim"
+                />
+                <FilterButton
+                  onClick={() => setters.setTaskFilter("IAM_RESPONSIBLE")}
+                  label="Sou responsável"
+                />
               </div>
             </div>
 
