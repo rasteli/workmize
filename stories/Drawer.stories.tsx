@@ -23,5 +23,18 @@ const Template: Story<DrawerProps> = args => <Drawer {...args} />
 
 export const Default = Template.bind({})
 Default.args = {
-  open: true
+  open: true,
+  task: {
+    id: "1",
+    name: "Tarefa 1",
+    isDone: false,
+    completionDate: "2021-12-16T15:00:00.000Z",
+    users: [
+      {
+        id: "user 1",
+        name: "Usuário 1",
+        avatar: "no-photo.jpg"
+      }
+    ]
+  }
 }

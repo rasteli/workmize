@@ -8,12 +8,17 @@ import {
   DrawerContent,
   IconButton
 } from "@chakra-ui/react"
-import { useState } from "react"
 import { useColorModeValue } from "@chakra-ui/color-mode"
 
 import { Label } from "../Label"
 import { Combobox } from "../Combobox"
 import { Calendar } from "../Calendar"
+import { Task } from "../../contexts/TaskContext"
+import { useTask } from "../../contexts/TaskContext"
+import { useCheckbox } from "../../hooks/useCheckbox"
+import { UserComboboxSelect } from "../UserComboboxSelect"
+
+import { getResponsibleUsers } from "../../utils/getResponsibleUsers"
 
 import { styles } from "./styles"
 
@@ -22,24 +27,60 @@ import Checked from "../../assets/check_checked.svg"
 import Unchecked from "../../assets/check_unchecked.svg"
 
 export interface DrawerProps {
+  task: Task
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function Drawer({ open, setOpen }: DrawerProps) {
-  const items = ["Usuário 1", "Usuário 2", "Usuário 3"]
+export function Drawer({ task, open, setOpen }: DrawerProps) {
+  const users = task.users
+
+  const [checkedItems, toggleItem] = useCheckbox(users)
+  const { toggleTaskCompletion, taskRefetch, updateTask } = useTask()
+
+  const responsible = getResponsibleUsers(users, checkedItems)
+
+  const taskProps = {
+    name: task.name,
+    isDone: task.isDone,
+    taskId: task.id,
+    responsible
+  }
+
+  const items = users.map((user, index) => (
+    <UserComboboxSelect
+      key={user.id}
+      user={user}
+      index={index}
+      toggleItem={toggleItem}
+      checked={checkedItems[index]}
+      onToggle={() =>
+        updateTask({
+          ...taskProps,
+          responsible: responsible.map(user => user.id)
+        })
+      }
+    />
+  ))
 
   const headerBg = useColorModeValue("#BCA8E9", "#31274F")
   const containerBg = useColorModeValue("#FFFFFF", "#171923")
   const closeButtonBg = useColorModeValue("#A0AEC0", "#464750")
 
-  const [done, setDone] = useState(false)
+  function close() {
+    setOpen(false)
+  }
+
+  async function toggleTask() {
+    await toggleTaskCompletion(task.id)
+    await taskRefetch()
+  }
 
   return (
     <ChakraDrawer
       isOpen={open}
       placement="right"
-      onClose={() => setOpen(false)}
+      onClose={close}
       variant="customWidth"
     >
       <DrawerOverlay />
@@ -48,7 +89,7 @@ export function Drawer({ open, setOpen }: DrawerProps) {
           icon={<Chevron />}
           aria-label="close button"
           style={styles.closeButton(closeButtonBg)}
-          onClick={() => setOpen(false)}
+          onClick={close}
         />
 
         <DrawerHeader style={styles.header(headerBg)}>
@@ -57,13 +98,13 @@ export function Drawer({ open, setOpen }: DrawerProps) {
 
         <DrawerBody>
           <div>
-            {done ? (
-              <Checked style={styles.checked} onClick={() => setDone(false)} />
+            {task.isDone ? (
+              <Checked style={styles.checked} onClick={toggleTask} />
             ) : (
-              <Unchecked style={styles.checked} onClick={() => setDone(true)} />
+              <Unchecked style={styles.checked} onClick={toggleTask} />
             )}
             <textarea className="task" rows={3} style={styles.textarea}>
-              Tarefa 1
+              {task.name}
             </textarea>
           </div>
 
@@ -74,7 +115,7 @@ export function Drawer({ open, setOpen }: DrawerProps) {
               defaultAction={false}
               label="Responsáveis"
               position="absolute"
-              placeholder="Adicione um ou vários"
+              placeholder={`${users.map(user => user.name)},`}
             />
           </div>
 

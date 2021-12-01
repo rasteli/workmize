@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@apollo/client"
 import { createContext, useContext, useState, useEffect } from "react"
+import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client"
 
 import { useAuth, User } from "./AuthContext"
 
@@ -15,9 +15,9 @@ interface TaskProviderProps {
   children: React.ReactNode
 }
 
-interface Task {
+export interface Task {
+  id: string
   name: string
-  taskId: string
   isDone: boolean
   completionDate: string
   users: User[]
@@ -57,6 +57,12 @@ interface TaskContextData {
   createTask(args: CreateTaskArgs): Promise<void>
   updateTask(args: UpdateTaskArgs): Promise<void>
   toggleTaskCompletion(taskId: string): Promise<void>
+  taskRefetch(
+    variables?: Partial<{
+      filterBy: string
+      search: string
+    }>
+  ): Promise<ApolloQueryResult<any>>
 
   setters: Setters
 }
@@ -117,10 +123,6 @@ export function TaskProvider({ children }: TaskProviderProps) {
     userRefetch()
   })
 
-  useEffect(() => {
-    taskRefetch()
-  }, [taskRefetch, taskFilter, taskSearch])
-
   async function deleteTask(taskId: string) {
     await removeTask({
       variables: {
@@ -178,6 +180,7 @@ export function TaskProvider({ children }: TaskProviderProps) {
     deleteTask,
     createTask,
     updateTask,
+    taskRefetch,
     toggleTaskCompletion,
 
     setters: {

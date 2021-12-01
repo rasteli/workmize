@@ -10,6 +10,7 @@ interface UserComboboxSelect {
   user: User
   index: number
   checked: boolean
+  onToggle?: () => void
   toggleItem(checked: boolean, index: number): void
 }
 
@@ -17,22 +18,26 @@ export function UserComboboxSelect({
   user,
   index,
   checked,
+  onToggle,
   toggleItem
 }: UserComboboxSelect) {
   const borderColor = useColorModeValue("#000", "#FFFFFF")
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    toggleItem(e.target.checked, index)
+
+    if (ontoggle) onToggle()
+  }
 
   return (
     <li style={styles.item}>
       <Checkbox
         colorScheme="gray"
         isChecked={checked}
+        onChange={handleChange}
         style={styles.checkbox(borderColor)}
-        onChange={e => toggleItem(e.target.checked, index)}
       />
-      <UserImage
-        src={`https://hiring-api.workmize.com/${user.avatar}`}
-        size={25}
-      />
+      <UserImage src={user.avatar} size={25} />
       <p style={styles.p}>{user.name}</p>
     </li>
   )

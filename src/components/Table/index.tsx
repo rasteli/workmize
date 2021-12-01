@@ -8,6 +8,8 @@ import { styles } from "./styles"
 import { useViewport } from "../../hooks/useViewport"
 import { useCheckbox } from "../../hooks/useCheckbox"
 
+import { UserImage } from "../UserImage"
+import { BottomToast } from "../BottomToast"
 import { formatDate } from "../../utils/formateDate"
 import { useTask } from "../../contexts/TaskContext"
 import { TableFirstColumn } from "../TableFirstColumn"
@@ -18,12 +20,13 @@ import Unchecked from "../../assets/check_unchecked.svg"
 
 interface CustomColumn {
   col1: React.ReactNode
-  col2: string[]
+  col2: React.ReactNode[]
   col3: string
 }
 
 export function Table() {
-  const { tasks } = useTask()
+  const [open, setOpen] = useState(false)
+  const { tasks, toggleTaskCompletion, taskRefetch } = useTask()
 
   const { aboveThreshold } = useViewport(756)
   const fontSize = aboveThreshold ? 16 : 12
@@ -38,13 +41,14 @@ export function Table() {
     return tasks.map(task => {
       return {
         col1: task.name,
-        col2: task.users.map(user => user.avatar),
+        col2: task.users.map(user => (
+          <UserImage key={user.id} src={user.avatar} size={25} noMargin />
+        )),
         col3: formatDate(task.completionDate)
       }
     })
   }, [tasks])
 
-  const [completedItems, toggleCompletedItem] = useCheckbox(data)
   const [checkedItems, toggleItem, toggleAllItems] = useCheckbox(data)
 
   const columns: Column<CustomColumn>[] = useMemo(
@@ -52,8 +56,12 @@ export function Table() {
       {
         Header: (
           <TableFirstColumn
+            allChecked={checkedItems.every(Boolean)}
             checkboxStyles={styles.checkbox(checkboxBorder)}
-            toggleAllItems={toggleAllItems}
+            onChange={e => {
+              toggleAllItems(e.target.checked)
+              setOpen(true)
+            }}
           />
         ),
         accessor: "col1"
@@ -67,7 +75,7 @@ export function Table() {
         accessor: "col3"
       }
     ],
-    [checkboxBorder, toggleAllItems]
+    [checkboxBorder, toggleAllItems, checkedItems]
   )
 
   const {
@@ -88,6 +96,16 @@ export function Table() {
     { columns, data, initialState: { pageSize: 6 } },
     usePagination
   )
+
+  function handleSelection(checked: boolean, index: number) {
+    toggleItem(checked, index)
+    setOpen(true)
+  }
+
+  async function toggleTask(index: number) {
+    await toggleTaskCompletion(tasks[index].id)
+    await taskRefetch()
+  }
 
   return (
     <div style={styles.container(containerBg)}>
@@ -132,19 +150,21 @@ export function Table() {
                           colorScheme="gray"
                           style={styles.checkbox(checkboxBorder)}
                           isChecked={checkedItems[rIndex]}
-                          onChange={e => toggleItem(e.target.checked, rIndex)}
+                          onChange={e =>
+                            handleSelection(e.target.checked, rIndex)
+                          }
                         />
 
                         {aboveThreshold &&
-                          (completedItems[rIndex] ? (
+                          (tasks[rIndex].isDone ? (
                             <Checked
                               style={{ cursor: "pointer" }}
-                              onClick={() => toggleCompletedItem(false, rIndex)}
+                              onClick={() => toggleTask(rIndex)}
                             />
                           ) : (
                             <Unchecked
                               style={{ cursor: "pointer" }}
-                              onClick={() => toggleCompletedItem(true, rIndex)}
+                              onClick={() => toggleTask(rIndex)}
                             />
                           ))}
                       </>
@@ -170,6 +190,14 @@ export function Table() {
         canNextPage={canNextPage}
         previousPage={previousPage}
         canPreviousPage={canPreviousPage}
+      />
+
+      <BottomToast
+        open={open}
+        setOpen={setOpen}
+        toggleSelection={toggleAllItems}
+        tasks={tasks.filter((_, index) => checkedItems[index])}
+        taskCount={checkedItems.filter(Boolean).length}
       />
     </div>
   )

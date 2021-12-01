@@ -65,13 +65,13 @@ export const UPDATE_TASK = gql`
 `
 
 export const DELETE_TASK = gql`
-  mutation DeleteTask($id: String!) {
-    deleteTask(DeleteTaskInput: { taskId: $id })
+  mutation DeleteTask($taskId: String!) {
+    deleteTask(DeleteTaskInput: { taskId: $taskId })
   }
 `
 
 export const TOGGLE_TASK = gql`
-  mutation ToggleTask($id: String!) {
-    toggleTask(ToggleTaskInput: { taskId: $id })
+  mutation ToggleTask($taskId: String!) {
+    toggleTask(ToggleTaskInput: { taskId: $taskId })
   }
 `

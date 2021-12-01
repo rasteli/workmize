@@ -7,13 +7,15 @@ import Search from "../../assets/search.svg"
 import { styles } from "./styles"
 
 interface TableFirstColumnProps {
+  allChecked: boolean
   checkboxStyles: React.CSSProperties
-  toggleAllItems: (checked: boolean) => void
+  onChange(event: React.ChangeEvent<HTMLInputElement>): void
 }
 
 export function TableFirstColumn({
+  allChecked,
   checkboxStyles,
-  toggleAllItems
+  onChange
 }: TableFirstColumnProps) {
   const [order, setOrder] = useState(false)
   const [search, setSearch] = useState(false)
@@ -24,8 +26,9 @@ export function TableFirstColumn({
     <div style={styles.container} onClick={() => search && setSearch(false)}>
       <Checkbox
         colorScheme="gray"
+        isChecked={allChecked}
         style={checkboxStyles}
-        onChange={e => toggleAllItems(e.target.checked)}
+        onChange={onChange}
       />
       <div style={{ color: "#805AD5" }}>
         Tarefa

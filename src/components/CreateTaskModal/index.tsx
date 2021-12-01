@@ -12,6 +12,8 @@ import { useTask } from "../../contexts/TaskContext"
 import { useCheckbox } from "../../hooks/useCheckbox"
 import { UserComboboxSelect } from "../UserComboboxSelect"
 
+import { getResponsibleUsers } from "../../utils/getResponsibleUsers"
+
 import Check from "../../assets/check.svg"
 
 interface CreateTaskModalProps {
@@ -20,9 +22,11 @@ interface CreateTaskModalProps {
 }
 
 export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
-  const { users, createTask, completionDate } = useTask()
+  const { users, createTask, taskRefetch } = useTask()
   const [checkedItems, toggleItem] = useCheckbox(users)
   const [name, setName] = useState("")
+
+  if (!open) return null
 
   const items = users.map((user, index) => (
     <UserComboboxSelect
@@ -34,16 +38,13 @@ export function CreateTaskModal({ open, setOpen }: CreateTaskModalProps) {
     />
   ))
 
-  const responsible = users.filter((user, index) => {
-    return checkedItems[index]
-  })
-
-  if (!open) return null
+  const responsible = getResponsibleUsers(users, checkedItems)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     await createTask({ name, responsible: responsible.map(user => user.id) })
+    await taskRefetch()
     setOpen(false)
   }
 

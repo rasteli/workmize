@@ -19,9 +19,11 @@ import { ToggleColorMode } from "../components/ToggleColorMode"
 import { CreateTaskModal } from "../components/CreateTaskModal"
 
 import { useTask } from "../contexts/TaskContext"
+import { useAuth } from "../contexts/AuthContext"
 import { withAuth } from "../components/AuthenticationHOC"
 
 function Home() {
+  const { user } = useAuth()
   const { aboveThreshold } = useViewport(756)
   const { taskLoading, userLoading, setters } = useTask()
 
@@ -64,10 +66,7 @@ function Home() {
         <main style={styles.main(borderBg)}>
           <header style={styles.header}>
             <div style={styles.userInfo}>
-              <UserImage
-                src="https://avatars.githubusercontent.com/u/59903124?v=4"
-                size={40}
-              />
+              <UserImage src={user.avatar} size={40} />
 
               <h1 style={styles.h1}>Minhas tarefas</h1>
 
@@ -77,7 +76,7 @@ function Home() {
                 onMouseLeave={() => setCardOpen(false)}
               >
                 <UserImage
-                  src="https://avatars.githubusercontent.com/u/59903124?v=4"
+                  src={user.avatar}
                   size={70}
                   transition="0.2s"
                   _hover={{ borderRadius: 20 }}
